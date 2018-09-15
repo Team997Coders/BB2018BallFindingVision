@@ -1,0 +1,27 @@
+// Required to be pre-installed: Python and PIP
+
+plugins {
+    // Get a python plugin for gradle so we can automate building/running this app 
+    id 'ru.vyarus.use-python' version '1.2.0'
+}
+
+// Declare our python dependencies so pip will automatically download it.
+python {
+    pip 'pynetworktables:2018.2.0'
+}
+
+task('run', type: PythonTask) {
+    description "Runs the network tables faux server application."
+    command = "ntserver.py"
+}
+
+task copyToOutput(type: Copy) {
+  description "Copies the ntserver.py application to the root output directory."
+  destinationDir = outputDirectory
+  from (file("ntserver.py")) {
+  }
+}
+
+task build(dependsOn: copyToOutput) {
+    description "Dummy build step so we can copy the app to the output directory when built."
+}

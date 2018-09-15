@@ -1,0 +1,6 @@
+// Required to be pre-installed: Python and PIP
+
+plugins {
+    // Get a python plugin for gradle so we can automate building/running this app 
+    id 'ru.vyarus.use-python' version '1.2.0'
+}
