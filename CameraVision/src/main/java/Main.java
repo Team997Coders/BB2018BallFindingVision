@@ -8,7 +8,7 @@ import edu.wpi.cscore.HttpCamera.HttpCameraKind;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.features2d.Features2d;
-import org.opencv.imgproc.Imgproc;
+//import org.opencv.imgproc.Imgproc;
 
 import com.beust.jcommander.*;
 
@@ -219,6 +219,7 @@ public class Main {
     return camera;
   }
 
+  /*
   private static UsbCamera setUsbCamera(int cameraId, MjpegServer server) {
     // This gets the image from a USB camera 
     // Usually this will be on device 0, but there are other overloads
@@ -227,4 +228,5 @@ public class Main {
     server.setSource(camera);
     return camera;
   }
+  */
 }
