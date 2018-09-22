@@ -1,3 +1,8 @@
+// Adds empty build, clean, and assemble tasks to project
+plugins {
+    id 'base'
+}
+
 allprojects {
     // This is where you select which operating system to build for.
 
@@ -13,7 +18,19 @@ allprojects {
     ext.outputDirectory = file("${rootDir}/output")
 }
 
-task clean {
+build.dependsOn ':CameraServer:build', ':CameraVision:build', ':NTSimulator:build'
+
+task copyStartupScript(type: Copy) {
+  description "Copies the startup application to the root output directory."
+  destinationDir = outputDirectory
+  from (file("startup.bat")) {
+  }
+}
+
+build.dependsOn copyStartupScript
+
+clean {
+    inputs.dir outputDirectory
     description "Remove the root output directory."
     delete outputDirectory
 }

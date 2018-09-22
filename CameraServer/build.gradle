@@ -1,6 +1,24 @@
-// Required to be pre-installed: Python and PIP
+// Required to be pre-installed to build: Python and PIP
+// Required to be pre-installed to run: Python and gstreamer
+// TODO: Is this easily automatable?
 
 plugins {
+    id 'base'
     // Get a python plugin for gradle so we can automate building/running this app 
     id 'ru.vyarus.use-python' version '1.2.0'
 }
+
+task copyToOutput(type: Copy) {
+  description "Copies the applications to the root output directory."
+  destinationDir = outputDirectory
+  from (file("live-mjpeg-stream.py")) {
+  }
+  if (buildType == "windows") {
+      from(file("stream-camera.bat"))
+  } else {
+      from(file("stream-camera.sh"))
+      from(file("set-camera.sh"))
+  }
+}
+
+assemble.dependsOn copyToOutput

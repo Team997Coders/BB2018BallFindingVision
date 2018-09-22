@@ -1,6 +1,7 @@
 // Required to be pre-installed: Python and PIP
 
 plugins {
+    id 'base'
     // Get a python plugin for gradle so we can automate building/running this app 
     id 'ru.vyarus.use-python' version '1.2.0'
 }
@@ -22,6 +23,4 @@ task copyToOutput(type: Copy) {
   }
 }
 
-task build(dependsOn: copyToOutput) {
-    description "Dummy build step so we can copy the app to the output directory when built."
-}
+assemble.dependsOn copyToOutput

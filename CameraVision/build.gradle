@@ -74,7 +74,7 @@ task writeExecuteScript() {
   doLast {
     if (buildType == "windows") {
       def runFile = new File("${buildDir}/run${projectName}.bat")
-      runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar --team 997 --nthost localhost --cameraurl \"http://visioncoproc.local:1337/mjpeg_stream\""
+      runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar --team 997 --nthost localhost --cameraurl \"http://localhost:1337/mjpeg_stream\""
     } else {
       def runFile = new File("${buildDir}/run${projectName}")
       runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar --team 997"
