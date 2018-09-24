@@ -18,12 +18,15 @@ allprojects {
     ext.outputDirectory = file("${rootDir}/output")
 }
 
+// Normally this is implicit with java plugin, but base plugin makes no sub-project assumptions
 build.dependsOn ':CameraServer:build', ':CameraVision:build', ':NTSimulator:build'
 
 task copyStartupScript(type: Copy) {
   description "Copies the startup application to the root output directory."
   destinationDir = outputDirectory
-  from (file("startup.bat")) {
+  if (buildType == "windows") {
+    from (file("startup.bat")) {
+    }
   }
 }
 
