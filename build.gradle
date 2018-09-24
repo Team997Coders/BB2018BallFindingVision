@@ -27,6 +27,8 @@ task copyStartupScript(type: Copy) {
   if (buildType == "windows") {
     from (file("startup.bat")) {
     }
+    from (file("local-debug-startup.bat")) {
+    }
   }
 }
 

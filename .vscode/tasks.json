@@ -1,0 +1,23 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    //
+    // Dependencies: python installed and in path
+    // Note: I'd like these dependencies tp run in debug mode
+    // but, VSCode does not provide an async
+    //
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Local Debug Startup",
+            "type": "shell",
+            "command": "local-debug-startup.bat",
+            "args": [
+                "1"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\output"                
+            }
+        }
+    ]
+}
