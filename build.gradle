@@ -67,6 +67,8 @@ clean {
 task deploy(dependsOn: build) {
     doLast {
         if (buildType == "windows") {
+            println "Windows deployment not coded at this time."
+        } else {
             ssh.run {
                 session(remotes.piccb) {
                     // Install dependencies
@@ -84,8 +86,6 @@ task deploy(dependsOn: build) {
                     execute 'dos2unix /home/pi/output/*.sh'
                 }
             }
-        } else {
-            println "Windows deployment not coded at this time."
         }
     }
 }
