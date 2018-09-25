@@ -10,6 +10,9 @@ allprojects {
     // will (naturally) fail.  Therefore, you can do:
     // gradlew build -x test
 
+    // TODO: Can we factor this out to the command line...and also select which
+    // remote definition to deploy to from the command line?
+
     // Uncomment the line below to build for windows
     //ext.buildType = "windows"
 
