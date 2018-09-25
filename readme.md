@@ -8,13 +8,13 @@ This is a sample project based on the [WPILib sample build system](https://githu
 
 ## Choosing which system to build for
 As there is no way to autodetect which system you want to build for, such as building for a Raspberry Pi on a windows desktop, you have to manually select which system you want to build for.
-To do this, use the -Ptarget=<target> parameter for the gradle build.  The valid targets are windows (the default), arm-raspbian, armhf.  So for example, to build for the raspberry pi, use `gradlew build -Ptarget="arm-raspbian"`. 
+To do this, use the `-Ptarget="target"` parameter for the gradle build.  The valid targets are `windows (the default), arm-raspbian, armhf`.  So for example, to build for the raspberry pi, use `gradlew build -Ptarget="arm-raspbian"`. 
 
 When you change targets, you should run a clean `gradlew clean` in order to
 clear out any old artifacts from other targets.
 
 ## Choosing the camera type
-The original WPILib sample only supported getting camera input from the roboRio, which is the only method supported when running vision processing on Windows.  This made testing on a Windows platform impractical.  It did support direct USB connect, but only via raspbian.  So you could debug on Windows, but you had to remote run the application on raspbian.  Again, troublesome.
+The original WPILib sample only supported getting camera input from the roboRio when running vision processing on Windows.  This made developing/testing on a Windows platform impractical.  It did support direct USB connect, but only via raspbian.  So you could debug on Windows, but you had to remote run the application on raspbian.  Again, troublesome.
 
 Instead, this sample has been expanded to use a utility [gstreamer](https://gstreamer.freedesktop.org) to grab output from a USB connected camera from either platform.
 
