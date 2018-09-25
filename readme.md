@@ -40,7 +40,9 @@ Finally, if buildType is targeting raspbian, a `gradlew deploy -x test` task exi
 ## What this gives you
 You can develop and test a WPILib image processing application without needing a robot.  You can develop develop and test on Windows and then deploy on a raspberry pi.  You can use a USB camera on either platform locally, or you can offload image capture to another device and not change image processing code.
 
-This sample gets an image from a local camera stream. It then restreams the input image in it's raw form in order to make it viewable on another system.
+JUnit and Mockito have been used to demonstrate automated testing of vision processing application, which factors out external dependencies (like having to have a camera plugged in).
+
+This complete sample gets an image from a local camera stream. It then restreams the input image in it's raw form in order to make it viewable on another system.
 It then creates an OpenCV sink from the camera, which allows us to grab OpenCV images. It then creates an output stream for an OpenCV image, for instance so you can stream an annotated
 image. The default sample attempts to identify a blue raquetball for the 2018 Bunny Bot game. In addition, a [NetworkTables simultated server](https://github.com/robotpy/pynetworktables) is set up, so you can send data regarding the targets to a server that simulates a robot.  A command line arg enables you to change this setting. (TODO: Document them here)
 
