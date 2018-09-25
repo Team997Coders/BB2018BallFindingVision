@@ -4,7 +4,7 @@ This is a sample project based on the [WPILib sample build system](https://githu
 
 * Windows
 * Raspberry Pi running Raspbian
-* Generic Armhf devices (such as the BeagleBone Black or the Jetson)
+* Generic Armhf devices (such as the BeagleBone Black or the Jetson) - not tested
 
 ## Choosing which system to build for
 As there is no way to autodetect which system you want to build for, such as building for a Raspberry Pi on a windows desktop, you have to manually select which system you want to build for.
