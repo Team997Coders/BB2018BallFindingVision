@@ -80,6 +80,8 @@ task writeExecuteScript() {
       // to local network tables test server or roborio (which will happen by default
       // without --nthost command line option)
       runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar --team 997 --nthost localhost --cameraurl \"http://localhost:1337/mjpeg_stream\""
+      def runDebugFile = new File("${buildDir}/run${projectName}-debug.sh")
+      runDebugFile.write "java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=1044 -Djava.library.path=. -jar ${projectName}-all.jar --team 997 --nthost localhost --cameraurl \"http://localhost:1337/mjpeg_stream\""
     }
   }
 }
@@ -101,6 +103,8 @@ task copyToOutput(type: Copy) {
   } else {
     from (file("${buildDir}/run${projectName}.sh")) {
     }
+    from (file("${buildDir}/run${projectName}-debug.sh")) {
+    }
   }
 }
 
@@ -120,7 +124,7 @@ task zipOutput(type: Zip) {
     from (file("${buildDir}/run${projectName}.bat")) {
     }
   } else {
-    from (file("${buildDir}/run${projectName}")) {
+    from (file("${buildDir}/run${projectName}.sh")) {
       fileMode 0777
     }
   }

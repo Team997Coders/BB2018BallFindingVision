@@ -49,6 +49,8 @@ task copyStartupScript(type: Copy) {
   } else {
     from (file("startup.sh")) {
     }
+    from (file("startup-debug.sh")) {
+    }
     from (file("local-debug-startup.sh")) {
     }
   }
@@ -74,6 +76,8 @@ task deploy(dependsOn: build) {
                     // Install dependencies
                     // This should bring up project from a fresh raspbian install.
                     // You must have ssh installed first using `sudo raspi-config`.
+                    // Will this work on the robo-rio?
+                    // Doubt it...don't know...must test.
                     executeSudo 'apt-get --assume-yes update'
                     executeSudo 'apt-get --assume-yes install dos2unix'
                     executeSudo 'apt-get --assume-yes install python3'
