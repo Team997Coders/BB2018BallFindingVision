@@ -32,6 +32,7 @@ remotes {
 
 ssh.settings {
     knownHosts = allowAnyHosts
+    fileTransfer = 'scp'
 }
 
 // Normally this is implicit with java plugin, but base plugin makes no sub-project assumptions
@@ -65,10 +66,26 @@ clean {
 // to deploy to.
 task deploy(dependsOn: build) {
     doLast {
-        ssh.run {
-            session(remotes.piccb) {
-                put from: 'output', into: '/home/pi'
+        if (buildType == "windows") {
+            ssh.run {
+                session(remotes.piccb) {
+                    // Install dependencies
+                    // This should bring up project from a fresh raspbian install.
+                    // You must have ssh installed first using `sudo raspi-config`.
+                    executeSudo 'apt-get --assume-yes update'
+                    executeSudo 'apt-get --assume-yes install dos2unix'
+                    executeSudo 'apt-get --assume-yes install python3'
+                    executeSudo 'apt-get --assume-yes install python3-pip'
+                    executeSudo 'apt-get --assume-yes install oracle-java8-jdk'
+                    execute 'pip3 install -U pynetworktables'
+                    // Now copy the build
+                    put from: 'output', into: '/home/pi'
+                    execute 'chmod u+x /home/pi/output/*.sh'
+                    execute 'dos2unix /home/pi/output/*.sh'
+                }
             }
+        } else {
+            println "Windows deployment not coded at this time."
         }
     }
 }

@@ -3,10 +3,10 @@
 # The first parameter is the device index of the camera to grab.
 # Linux assigns them in an unpredictable manner.  Default to video0
 #
-python ntserver.py &
-pause 3
-python live-mjpeg-stream.py &
-pause 3
+python3 ntserver.py &
+sleep 3
+python3 live-mjpeg-stream.py &
+sleep 3
 ./stream-camera.sh $1 &
-pause 3
+sleep 3
 ./runCameraVision.sh &

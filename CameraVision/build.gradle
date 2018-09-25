@@ -75,7 +75,7 @@ task writeExecuteScript() {
       def runFile = new File("${buildDir}/run${projectName}.bat")
       runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar --team 997 --nthost localhost --cameraurl \"http://localhost:1337/mjpeg_stream\""
     } else {
-      def runFile = new File("${buildDir}/run${projectName}")
+      def runFile = new File("${buildDir}/run${projectName}.sh")
       // probably will need a switch to determine whether we are targeting connecting
       // to local network tables test server or roborio (which will happen by default
       // without --nthost command line option)
@@ -99,7 +99,7 @@ task copyToOutput(type: Copy) {
     from (file("${buildDir}/run${projectName}.bat")) {
     }
   } else {
-    from (file("${buildDir}/run${projectName}")) {
+    from (file("${buildDir}/run${projectName}.sh")) {
     }
   }
 }
