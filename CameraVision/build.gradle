@@ -37,13 +37,12 @@ test {
 
   options {
     // This makes the native opencv bits available to be found and loaded by unit tests
-    // TODO: add LD_LIBRARY_PATH for linux targets
-    // This also will probably bork up when, for example,
-    // building on Windows targeting the raspberry pi...
-    // so something will need to be figured out...(like blowing off the test step for example)
     if (buildType == "windows") {
       def path = '' + openCvUnzipLocation
       environment 'PATH', path
+    } else {
+      def path = '' + openCvUnzipLocation
+      environment 'LD_LIBRARY_PATH', path
     }
   }
 }
@@ -77,7 +76,10 @@ task writeExecuteScript() {
       runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar --team 997 --nthost localhost --cameraurl \"http://localhost:1337/mjpeg_stream\""
     } else {
       def runFile = new File("${buildDir}/run${projectName}")
-      runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar --team 997"
+      // probably will need a switch to determine whether we are targeting connecting
+      // to local network tables test server or roborio (which will happen by default
+      // without --nthost command line option)
+      runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar --team 997 --nthost localhost --cameraurl \"http://localhost:1337/mjpeg_stream\""
     }
   }
 }

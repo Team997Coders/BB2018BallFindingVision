@@ -1,21 +1,37 @@
 // Adds empty build, clean, and assemble tasks to project
 plugins {
     id 'base'
+    id 'org.hidetake.ssh' version '2.9.0'
 }
 
 allprojects {
     // This is where you select which operating system to build for.
+    // NOTE: If you do a build on Windows targeting another architecture, tests
+    // will (naturally) fail.  Therefore, you can do:
+    // gradlew build -x test
 
     // Uncomment the line below to build for windows
-    ext.buildType = "windows"
+    //ext.buildType = "windows"
 
     // Uncomment the line below to build for a Raspberry Pi running raspbian
-    //ext.buildType = "arm-raspbian"
+    ext.buildType = "arm-raspbian"
 
     // Uncomment the line below to build for an armhf device such as a Jetson or a Beaglebone Black
     //ext.buildType = "armhf"
 
     ext.outputDirectory = file("${rootDir}/output")
+}
+
+remotes {
+    piccb {
+        host = 'visioncoproc.local'
+        user = 'pi'
+        password = 'raspberry'
+    }
+}
+
+ssh.settings {
+    knownHosts = allowAnyHosts
 }
 
 // Normally this is implicit with java plugin, but base plugin makes no sub-project assumptions
@@ -29,6 +45,11 @@ task copyStartupScript(type: Copy) {
     }
     from (file("local-debug-startup.bat")) {
     }
+  } else {
+    from (file("startup.sh")) {
+    }
+    from (file("local-debug-startup.sh")) {
+    }
   }
 }
 
@@ -38,4 +59,16 @@ clean {
     inputs.dir outputDirectory
     description "Remove the root output directory."
     delete outputDirectory
+}
+
+// Make the deploy task accept a parameter that will tell below which remote
+// to deploy to.
+task deploy(dependsOn: build) {
+    doLast {
+        ssh.run {
+            session(remotes.piccb) {
+                put from: 'output', into: '/home/pi'
+            }
+        }
+    }
 }
