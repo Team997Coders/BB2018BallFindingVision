@@ -73,13 +73,21 @@ task deploy(dependsOn: build) {
                     // You must have ssh installed first using `sudo raspi-config`.
                     // Will this work on the robo-rio?
                     // Doubt it...don't know...must test.
-                    executeSudo 'apt-get --assume-yes update'
-                    executeSudo 'apt-get --assume-yes install dos2unix'
-                    executeSudo 'apt-get --assume-yes install python3'
-                    executeSudo 'apt-get --assume-yes install python3-pip'
-                    executeSudo 'apt-get --assume-yes install oracle-java8-jdk'
-                    executeSudo 'apt-get --assume-yes install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools'
-                    execute 'pip3 install -U pynetworktables'
+                    try {
+                        // this little trick will quickly determine if we are connected
+                        // to the internet and will throw an error if not
+                        execute 'nc -z 8.8.8.8 53'
+                        executeSudo 'apt-get --assume-yes update'
+                        executeSudo 'apt-get --assume-yes install dos2unix'
+                        executeSudo 'apt-get --assume-yes install python3'
+                        executeSudo 'apt-get --assume-yes install python3-pip'
+                        executeSudo 'apt-get --assume-yes install oracle-java8-jdk'
+                        executeSudo 'apt-get --assume-yes install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools'
+                        execute 'pip3 install -U pynetworktables'
+                    } catch (Exception e)
+                    {
+                        println "Could not install dependencies.  Connected to Internet?"
+                    }
                     // Now copy the build
                     put from: 'output', into: '/home/pi'
                     execute 'chmod u+x /home/pi/output/*.sh'
