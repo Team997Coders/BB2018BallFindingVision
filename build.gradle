@@ -86,6 +86,7 @@ task deploy(dependsOn: build) {
                     executeSudo 'apt-get --assume-yes install python3'
                     executeSudo 'apt-get --assume-yes install python3-pip'
                     executeSudo 'apt-get --assume-yes install oracle-java8-jdk'
+                    executeSudo 'apt-get --assume-yes install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools'
                     execute 'pip3 install -U pynetworktables'
                     // Now copy the build
                     put from: 'output', into: '/home/pi'
