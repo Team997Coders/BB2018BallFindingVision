@@ -11,13 +11,20 @@
         {
             "label": "Local Debug Startup",
             "type": "shell",
-            "command": "local-debug-startup.bat",
+            "command": "local-debug-startup.bat",,
+            "dependsOn": "build",
             "args": [
                 "1"
             ],
             "options": {
                 "cwd": "${workspaceFolder}\\output"                
             }
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "gradlew build",
+            "args": []
         }
     ]
 }

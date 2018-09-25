@@ -29,7 +29,7 @@
         },
         {
             "type": "java",
-            "name": "Debug CCB Pi (Attach)",
+            "name": "Debug visioncoproc.local (Attach)",
             "request": "attach",
             "hostName": "visioncoproc.local",
             "port": 1044

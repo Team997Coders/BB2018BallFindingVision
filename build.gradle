@@ -5,22 +5,14 @@ plugins {
 }
 
 allprojects {
-    // This is where you select which operating system to build for.
     // NOTE: If you do a build on Windows targeting another architecture, tests
     // will (naturally) fail.  Therefore, you can do:
-    // gradlew build -x test
+    // gradlew build -x test -Ptarget="arm-raspbian"
+    // If development of Windows and targeting windows, simply do:
+    // gradlew build
+    // valid targets = windows (default), arm-raspbian, armhf
 
-    // TODO: Can we factor this out to the command line...and also select which
-    // remote definition to deploy to from the command line?
-
-    // Uncomment the line below to build for windows
-    //ext.buildType = "windows"
-
-    // Uncomment the line below to build for a Raspberry Pi running raspbian
-    ext.buildType = "arm-raspbian"
-
-    // Uncomment the line below to build for an armhf device such as a Jetson or a Beaglebone Black
-    //ext.buildType = "armhf"
+    ext.buildType = project.hasProperty('target') ? project.property('target') : 'windows'
 
     ext.outputDirectory = file("${rootDir}/output")
 }
