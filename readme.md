@@ -1,13 +1,10 @@
-# Java sample vision system
+# Bunny Bot 2018 sample vision system
 
-This is the WPILib sample build system for building Java based vision targeting for running on systems other than the roboRIO. This currently supports the following platforms
+This is a sample project based on the [WPILib sample build system](https://github.com/wpilibsuite/VisionBuildSamples) for building Java based vision targeting for running on systems other than the roboRIO. This currently supports the following target platforms with a Windows development environment:
 
 * Windows
 * Raspberry Pi running Raspbian
 * Generic Armhf devices (such as the BeagleBone Black or the Jetson)
-
-It has been designed to be easy to setup and use, and only needs a few minor settings to pick which system you want to be ran on. It has samples for interfacing with NetworkTables and CsCore from
-any device, along with performing OpenCV operations.
 
 ## Choosing which system to build for
 As there is no way to autodetect which system you want to build for, such as building for a Raspberry Pi on a windows desktop, you have to manually select which system you want to build for.
@@ -18,26 +15,32 @@ Note it is possible to easily switch which system you want to target. To do so, 
 clear out any old artifacts. 
 
 ## Choosing the camera type
-This sample includes 2 ways to get a camera image. The first way is from a stream coming from the roboRIO, which is created with `CameraServer.getInstance().startAutomaticCapture();`. This 
-is the only method that is supported on windows. The second way is by opening a USB camera directly on the device. This will likely allow higher resolutions, however is only supported on Linux
-devices.
+The original WPILib sample only supported getting camera input from the roboRio, which is the only method supported on Windows.  This made testing on a Windows platform impractical.  It did support direct USB connect, but only via raspbian.
 
-To select between the types, open the `Main.java` file in `src/main/java`, and scroll down to the line that says "Selecting a Camera". Follow the directions there to select one.
+Instead, this sample has been expanded to use a utility [gstreamer](https://gstreamer.freedesktop.org) to grab output from a USB connected camera from either platform.
+
+Further, an MJPEG streaming server is included to make it possible for the image processing application to simply reference a streaming source over HTTP using the WPILib HttpCamera class, even if you do not have a network camera.  This streaming source can be from a local USB camera, or you can offload image streaming to a another device and separate image processing from streaming.  See the CameraServer sub-project.
 
 ## Building and running on the local device
-If you are running the build for your specific platform on the device you plan on running, you can use `gradlew run` to run the code directly. You can also run `gradlew build` to run a build.
+You can run `gradlew build` to run a build for a Windows target.
+
 When doing this, the output files will be placed into `output\`. From there, you can run either the .bat file on windows or the shell script on unix in order to run your project.
 
+You can also run the project from the VSCode debugger locally and remotely using the built-in task and launch settings. (TODO: Put more in about this)
+
 ## Building for another platform
-If you are building for another platform, trying to run `gradlew run` will not work, as the OpenCV binaries will not be set up correctly. In that case, when you run `gradlew build`, a zip file
+If you are building for another platform, trying to run `gradlew build` will not work, as tests will not run on Windows targeting another platform.  You can run `gradlew build -x test` to ignore tests.
+
+In that case, when you run the build, a zip file
 is placed in `output\`. This zip contains the built jar, the OpenCV library for your selected platform, and either a .bat file or shell script to run everything. All you have to do is copy
-this file to the system, extract it, then run the .bat or shell script to run your program
+this file to the system, extract it, then run the .bat or shell script to run your program.
+
+Finally, if buildType is targeting raspbian, a `gradlew deploy -x test` task exists to deploy built project automatically to a raspberry pi.  No dependencies are required to be installed on the pi other than the stretch distro.  The deploy task will automatically install them. (TODO: Talk more about the settings on connecting to pi.)
 
 ## What this gives you
-This sample gets an image either from a USB camera or an already existing stream. It then restreams the input image in it's raw form in order to make it viewable on another system.
+This sample gets an image from a local camera stream. It then restreams the input image in it's raw form in order to make it viewable on another system.
 It then creates an OpenCV sink from the camera, which allows us to grab OpenCV images. It then creates an output stream for an OpenCV image, for instance so you can stream an annotated
-image. The default sample just performs a color conversion from BGR to HSV, however from there it is easy to create your own OpenCV processing in order to run everything. In addition, it is possible
-to run a pipeline generated from GRIP. In addition, a connection to NetworkTables is set up, so you can send data regarding the targets back to your robot.
+image. The default sample attempts to identify a blue raquetball for the 2018 Bunny Bot game. In addition, a NetworkTables simultated server is set up, so you can send data regarding the targets to a server that simulates a robot.  A command line arg enables you to change this setting. (TODO: Document them here)
 
 ## Other configuration options
 The build script provides a few other configuration options. These include selecting the main class name, and providing an output name for the project.
