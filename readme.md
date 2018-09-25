@@ -15,7 +15,7 @@ Note it is possible to easily switch which system you want to target. To do so, 
 clear out any old artifacts. 
 
 ## Choosing the camera type
-The original WPILib sample only supported getting camera input from the roboRio, which is the only method supported on Windows.  This made testing on a Windows platform impractical.  It did support direct USB connect, but only via raspbian.
+The original WPILib sample only supported getting camera input from the roboRio, which is the only method supported when running vision processing on Windows.  This made testing on a Windows platform impractical.  It did support direct USB connect, but only via raspbian.  So you could debug on Windows, but you had to remote run the application on rasbian.  Again, troublesome.
 
 Instead, this sample has been expanded to use a utility [gstreamer](https://gstreamer.freedesktop.org) to grab output from a USB connected camera from either platform.
 
