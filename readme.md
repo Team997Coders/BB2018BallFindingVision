@@ -8,11 +8,10 @@ This is a sample project based on the [WPILib sample build system](https://githu
 
 ## Choosing which system to build for
 As there is no way to autodetect which system you want to build for, such as building for a Raspberry Pi on a windows desktop, you have to manually select which system you want to build for.
-To do this, open the `build.gradle` file. Near the top at line 10 starts a group of comments explaining what to do. For a basic rundown, there are 3 lines that start with `ext.buildType =`. 
-To select a device, just uncomment the system you want to build for. 
+To do this, use the -Ptarget=<target> parameter for the gradle build.  The valid targets are windows (the default), arm-raspbian, armhf.  So for example, to build for the raspberry pi, use `gradlew build -Ptarget="arm-raspbian"`. 
 
-Note it is possible to easily switch which system you want to target. To do so, just switch which build type is uncommented. When you do this, you will have to run a clean `gradlew clean` in order to
-clear out any old artifacts. 
+When you change targets, you should run a clean `gradlew clean` in order to
+clear out any old artifacts from other targets.
 
 ## Choosing the camera type
 The original WPILib sample only supported getting camera input from the roboRio, which is the only method supported when running vision processing on Windows.  This made testing on a Windows platform impractical.  It did support direct USB connect, but only via raspbian.  So you could debug on Windows, but you had to remote run the application on raspbian.  Again, troublesome.
@@ -29,13 +28,13 @@ When doing this, the output files will be placed into `output\`. From there, you
 You can also run the project from the VSCode debugger locally and remotely using the built-in task and launch settings. (TODO: Put more in about this)
 
 ## Building for another platform
-If you are building for another platform, trying to run `gradlew build` will not work, as tests will not run on Windows targeting another platform.  You can run `gradlew build -x test` to ignore tests.
+If you are building for another platform, trying to run `gradlew build -Ptarget=<target>` will not work, as tests will not run on Windows targeting another platform.  You can run `gradlew build -x test -Ptarget=<target>` to ignore tests.
 
 In that case, when you run the build, a zip file
 is placed in `output\`. This zip contains the built jar, the OpenCV library for your selected platform, and either a .bat file or shell script to run everything. All you have to do is copy
 this file to the system, extract it, then run the .bat or shell script to run your program.
 
-Finally, if buildType is targeting raspbian, a `gradlew deploy -x test` task exists to deploy built project automatically to a raspberry pi.  No dependencies are required to be installed on the pi other than the stretch distro.  The deploy task will automatically install them. (TODO: Talk more about the settings on connecting to pi.)
+Finally, if buildType is targeting raspbian, a `gradlew deploy -x test -Ptarget="arm-raspbian"` task exists to deploy built project automatically to a raspberry pi.  No dependencies are required to be installed on the pi other than the stretch distro.  The deploy task will automatically install them. (TODO: Talk more about the settings on connecting to pi.)
 
 ## What this gives you
 You can develop and test a WPILib image processing application without needing a robot.  You can develop develop and test on Windows and then deploy on a raspberry pi.  You can use a USB camera on either platform locally, or you can offload image capture to another device and not change image processing code.
