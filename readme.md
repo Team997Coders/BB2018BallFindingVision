@@ -15,7 +15,7 @@ Note it is possible to easily switch which system you want to target. To do so, 
 clear out any old artifacts. 
 
 ## Choosing the camera type
-The original WPILib sample only supported getting camera input from the roboRio, which is the only method supported when running vision processing on Windows.  This made testing on a Windows platform impractical.  It did support direct USB connect, but only via raspbian.  So you could debug on Windows, but you had to remote run the application on rasbian.  Again, troublesome.
+The original WPILib sample only supported getting camera input from the roboRio, which is the only method supported when running vision processing on Windows.  This made testing on a Windows platform impractical.  It did support direct USB connect, but only via raspbian.  So you could debug on Windows, but you had to remote run the application on raspbian.  Again, troublesome.
 
 Instead, this sample has been expanded to use a utility [gstreamer](https://gstreamer.freedesktop.org) to grab output from a USB connected camera from either platform.
 
@@ -40,7 +40,7 @@ Finally, if buildType is targeting raspbian, a `gradlew deploy -x test` task exi
 ## What this gives you
 This sample gets an image from a local camera stream. It then restreams the input image in it's raw form in order to make it viewable on another system.
 It then creates an OpenCV sink from the camera, which allows us to grab OpenCV images. It then creates an output stream for an OpenCV image, for instance so you can stream an annotated
-image. The default sample attempts to identify a blue raquetball for the 2018 Bunny Bot game. In addition, a NetworkTables simultated server is set up, so you can send data regarding the targets to a server that simulates a robot.  A command line arg enables you to change this setting. (TODO: Document them here)
+image. The default sample attempts to identify a blue raquetball for the 2018 Bunny Bot game. In addition, a [NetworkTables simultated server](https://github.com/robotpy/pynetworktables) is set up, so you can send data regarding the targets to a server that simulates a robot.  A command line arg enables you to change this setting. (TODO: Document them here)
 
 ## Other configuration options
 The build script provides a few other configuration options. These include selecting the main class name, and providing an output name for the project.
