@@ -38,6 +38,8 @@ this file to the system, extract it, then run the .bat or shell script to run yo
 Finally, if buildType is targeting raspbian, a `gradlew deploy -x test` task exists to deploy built project automatically to a raspberry pi.  No dependencies are required to be installed on the pi other than the stretch distro.  The deploy task will automatically install them. (TODO: Talk more about the settings on connecting to pi.)
 
 ## What this gives you
+You can develop and test a WPILib image processing application without needing a robot.  You can develop develop and test on Windows and then deploy on a raspberry pi.  You can use a USB camera on either platform locally, or you can offload image capture to another device and not change image processing code.
+
 This sample gets an image from a local camera stream. It then restreams the input image in it's raw form in order to make it viewable on another system.
 It then creates an OpenCV sink from the camera, which allows us to grab OpenCV images. It then creates an output stream for an OpenCV image, for instance so you can stream an annotated
 image. The default sample attempts to identify a blue raquetball for the 2018 Bunny Bot game. In addition, a [NetworkTables simultated server](https://github.com/robotpy/pynetworktables) is set up, so you can send data regarding the targets to a server that simulates a robot.  A command line arg enables you to change this setting. (TODO: Document them here)
