@@ -26,6 +26,8 @@ def runForever():
     logging.basicConfig(level=logging.DEBUG)
 
     NetworkTables.initialize()
+    # TODO: Make this read in a JSON file to init NT database
+    # TODO: Can we make a simple web server to display NT contents?
     sd = NetworkTables.getTable("SmartDashboard")
     camera = NetworkTables.getTable("CameraPublisher/VisionCoProc")
     camera.putStringArray('streams', ['mjpg:http://visioncoproc.local:1337/mjpeg_stream'])

@@ -1,46 +1,22 @@
-// Required to be pre-installed: Python and pipenv
+// Required to be pre-installed: Python3
 
-plugins {
-    id 'base'
-}
+// TODO: Flip this back to pull from remote repo when author implements my pull request.
+//plugins {
+//  id 'com.analog.garage.pygrad' version '0.1.10'
+//}
 
-task('run', type: Exec) {
-    description "Runs the NetworkTables simulator server application."
-    commandLine "pipenv", "run", "ntserver"
-}
-
-assemble {
-    doLast {
-        println "Assemble complete."
-    }
-}
-
-task('lint', type: Exec) {
-    inputs.files fileTree("src") { include '**/*.py'}
-    commandLine "pipenv", "run", "pylint", "-E", "-f", "parseable", "-r", "n", "src"
-}
-
-task('prep', type:Exec) {
-    inputs.files "./Pipfile"
-    commandLine "pipenv", "install"
-}
-
-build {
-  inputs.files fileTree("src") { include '**/*.py'}
-  doLast {
-      println "Build complete."
+buildscript {
+  dependencies {
+    classpath files("../bin/lib/pygrad-0.1.10-ccb.jar")
   }
 }
 
-task('install', type:Exec) {
-    commandLine "pipenv", "install", "-e", "./src"
+apply plugin: 'com.analog.garage.pygrad'
+
+python {
+    sourceDir = "src"
+    pythonExe = "python"
+    buildRequirements = ['pynetworktables']
 }
 
-task('uninstall', type:Exec) {
-    commandLine "pipenv", "uninstall", "ntserver"
-}
-
-assemble.dependsOn prep
-assemble.dependsOn lint 
-run.dependsOn build
-install.dependsOn build
+build.dependsOn pyenv
