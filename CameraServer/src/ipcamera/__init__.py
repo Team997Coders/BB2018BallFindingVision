@@ -2,7 +2,7 @@
 # based on the ideas from http://synack.me/blog/implementing-http-live-streaming
 # lifted from https://gist.github.com/sakti/4761739
 # Note that a few bugs have been fixed: Content-Type caps and boundary dashes removed - CCB
-# Also, upgraded to run python3 (python2 will not longer work)
+# Also, upgraded to run python3 (python2 will no longer work)
 # Run this script and then launch the following pipeline:
 # gst-launch videotestsrc pattern=ball ! video/x-raw-rgb, framerate=15/1, width=640, height=480 !  jpegenc ! multipartmux boundary=spionisto ! tcpclientsink port=9999
 
@@ -97,8 +97,7 @@ def input_loop(app):
                     q.put(data)
         print ('Lost input stream from', addr)
 
-if __name__ == '__main__':
-
+def runForever():
     #Launch an instance of wsgi server
     app = IPCameraApp()
     port = 1337

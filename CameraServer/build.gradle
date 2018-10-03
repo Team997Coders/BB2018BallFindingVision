@@ -1,13 +1,23 @@
-// Required to be pre-installed to build: Python and PIP
-// Required to be pre-installed to run: Python and gstreamer
+// Required to be pre-installed to build: Python3
+// Required to be pre-installed to run: gstreamer
 // TODO: Is this easily automatable?
 
-plugins {
-    id 'base'
-    // Get a python plugin for gradle so we can automate building/running this app 
-    id 'ru.vyarus.use-python' version '1.2.0'
+buildscript {
+  dependencies {
+    classpath files("../bin/lib/pygrad-0.1.10-ccb.jar")
+  }
 }
 
+apply plugin: 'com.analog.garage.pygrad'
+
+python {
+    sourceDir = "src"
+    pythonExe = "python"
+}
+
+build.dependsOn pyenv
+
+/*
 task copyToOutput(type: Copy) {
   description "Copies the applications to the root output directory."
   destinationDir = outputDirectory
@@ -23,3 +33,4 @@ task copyToOutput(type: Copy) {
 
 assemble.dependsOn copyToOutput
 build.dependsOn pipInstall
+*/
