@@ -159,4 +159,10 @@ bin/
 # # For this project, ignore output directory
 output/
 
+# Ignore python virtual environments
+.venv/
+
+# Ignore python egg directories
+*.egg-info/
+
 # End of https://www.gitignore.io/api/c++,java,linux,macos,gradle,windows,visualstudiocode

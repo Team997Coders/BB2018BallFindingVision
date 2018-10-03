@@ -6,6 +6,20 @@ This is a sample project based on the [WPILib sample build system](https://githu
 * Raspberry Pi running Raspbian
 * Generic Armhf devices (such as the BeagleBone Black or the Jetson) - not tested
 
+## Windows development system requirements
+* [VSCode](https://code.visualstudio.com/download)
+  * Plugins
+    * Language Support for Java by Red Hat
+    * Python
+* [Git](https://git-scm.com/downloads)
+  * Lots of setup dialogs.  Just take all the defaults.
+* [Python3](https://www.python.org/downloads/)
+  *  Be sure to add Python to path.  It is an unchecked option on the install dialog.
+  *  pip and pipenv
+* [Java 8](https://developers.redhat.com/products/openjdk/download/)
+* [gstreamer](https://gstreamer.freedesktop.org/download/)
+  * Run the complete install instead of the typical install.
+
 ## Choosing which system to build for
 As there is no way to autodetect which system you want to build for, such as building for a Raspberry Pi on a windows desktop, you have to manually select which system you want to build for.
 To do this, use the `-Ptarget="target"` parameter for the gradle build.  The valid targets are `windows (the default), arm-raspbian, armhf`.  So for example, to build for the raspberry pi, use `gradlew build -Ptarget="arm-raspbian"`. 

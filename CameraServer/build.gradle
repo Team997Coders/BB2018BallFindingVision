@@ -22,3 +22,4 @@ task copyToOutput(type: Copy) {
 }
 
 assemble.dependsOn copyToOutput
+build.dependsOn pipInstall

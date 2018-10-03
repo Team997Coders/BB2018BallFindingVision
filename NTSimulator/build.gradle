@@ -1,26 +1,46 @@
-// Required to be pre-installed: Python and PIP
+// Required to be pre-installed: Python and pipenv
 
 plugins {
     id 'base'
-    // Get a python plugin for gradle so we can automate building/running this app 
-    id 'ru.vyarus.use-python' version '1.2.0'
 }
 
-// Declare our python dependencies so pip will automatically download it.
-python {
-    pip 'pynetworktables:2018.2.0'
+task('run', type: Exec) {
+    description "Runs the NetworkTables simulator server application."
+    commandLine "pipenv", "run", "ntserver"
 }
 
-task('run', type: PythonTask) {
-    description "Runs the network tables faux server application."
-    command = "ntserver.py"
+assemble {
+    doLast {
+        println "Assemble complete."
+    }
 }
 
-task copyToOutput(type: Copy) {
-  description "Copies the ntserver.py application to the root output directory."
-  destinationDir = outputDirectory
-  from (file("ntserver.py")) {
+task('lint', type: Exec) {
+    inputs.files fileTree("src") { include '**/*.py'}
+    commandLine "pipenv", "run", "pylint", "-E", "-f", "parseable", "-r", "n", "src"
+}
+
+task('prep', type:Exec) {
+    inputs.files "./Pipfile"
+    commandLine "pipenv", "install"
+}
+
+build {
+  inputs.files fileTree("src") { include '**/*.py'}
+  doLast {
+      println "Build complete."
   }
 }
 
-assemble.dependsOn copyToOutput
+task('install', type:Exec) {
+    commandLine "pipenv", "install", "-e", "./src"
+}
+
+task('uninstall', type:Exec) {
+    commandLine "pipenv", "uninstall", "ntserver"
+}
+
+assemble.dependsOn prep
+assemble.dependsOn lint 
+run.dependsOn build
+install.dependsOn build

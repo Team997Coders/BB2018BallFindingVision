@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "CameraServer"
+		},
+		{
+			"path": "CameraVision"
+		},
+		{
+			"path": "NTSimulator"
+		},
+		{
+			"path": "scripts"
+		},
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "automatic",
+		"terminal.integrated.env.windows": {
+			"PIPENV_VENV_IN_PROJECT": "1"
+		}
+	}
+}

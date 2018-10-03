@@ -21,14 +21,15 @@ import logging
 def valueChanged(table, key, value, isNew):
     print("valueChanged: key: '%s'; value: %s; isNew: %s" % (key, value, isNew))
 
-# To see messages from networktables, you must setup logging
-logging.basicConfig(level=logging.DEBUG)
+def runForever():
+    # To see messages from networktables, you must setup logging
+    logging.basicConfig(level=logging.DEBUG)
 
-NetworkTables.initialize()
-sd = NetworkTables.getTable("SmartDashboard")
-camera = NetworkTables.getTable("CameraPublisher/VisionCoProc")
-camera.putStringArray('streams', ['mjpg:http://visioncoproc.local:1337/mjpeg_stream'])
-sd.addEntryListener(valueChanged)
-    
-while True:
-    time.sleep(1)
+    NetworkTables.initialize()
+    sd = NetworkTables.getTable("SmartDashboard")
+    camera = NetworkTables.getTable("CameraPublisher/VisionCoProc")
+    camera.putStringArray('streams', ['mjpg:http://visioncoproc.local:1337/mjpeg_stream'])
+    sd.addEntryListener(valueChanged)
+        
+    while True:
+        time.sleep(1)

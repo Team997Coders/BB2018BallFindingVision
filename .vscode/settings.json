@@ -1,4 +1,7 @@
 {
-    "python.pythonPath": "C:\\Users\\chsrobotics\\AppData\\Local\\Programs\\Python\\Python37\\python.exe",
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "python.pythonPath": "C:\\Users\\chuck\\AppData\\Local\\Programs\\Python\\Python37\\python.exe",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "terminal.integrated.env.windows": {
+        "PIPENV_VENV_IN_PROJECT":"1"
+    }
 }
