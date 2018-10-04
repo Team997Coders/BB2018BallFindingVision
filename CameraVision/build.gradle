@@ -9,9 +9,23 @@ apply plugin: 'application'
 mainClassName = 'Main'
 // Change the line below to change the name of the output jar
 def projectName = 'CameraVision'
+// Put in your FRC team number
+def team = '997'
+// Put in a host address for network tables simulator server or leave blank for roboRio
+def nthost = 'localhost'
+// Put in a URL for the web camera
+def cameraURL = 'http://localhost:1337/mjpeg_stream'
 
 // Shouldn't need to change anything below this point
+
 apply from: 'dependencies.gradle'
+
+def nthostSwitch = ''
+if (nthost != "") {
+  nthostSwitch = "--nthost ${nthost}"
+}
+
+def scriptsDir = "${buildDir}/scripts"
 
 repositories {
     mavenCentral()
@@ -53,6 +67,21 @@ jar {
 
 shadowJar {
   baseName = projectName
+
+  doLast {
+    def commandString = "java -Djava.library.path=. -jar ${projectName}-all.jar --team ${team} ${nthostSwitch} --cameraurl \"${cameraURL}\""
+    def debugCommandString = "java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=1044 -Djava.library.path=. -jar ${projectName}-all.jar --team ${team} ${nthostSwitch} --cameraurl \"${cameraURL}\""
+
+    if (buildType == "windows") {
+      def runFile = new File("${scriptsDir}/run${projectName}.bat")
+      runFile.write commandString
+    } else {
+      def runFile = new File("${scriptsDir}/run${projectName}.sh")
+      runFile.write commandString
+      def runDebugFile = new File("${scriptsDir}/run${projectName}-debug.sh")
+      runDebugFile.write debugCommandString
+    }
+  }
 }
 
 distributions {
@@ -68,52 +97,12 @@ distributions {
   }
 }
 
-task writeExecuteScript() {
-  dependsOn jar
-  doLast {
-    if (buildType == "windows") {
-      def runFile = new File("${buildDir}/run${projectName}.bat")
-      runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar --team 997 --nthost localhost --cameraurl \"http://localhost:1337/mjpeg_stream\""
-    } else {
-      def runFile = new File("${buildDir}/run${projectName}.sh")
-      // probably will need a switch to determine whether we are targeting connecting
-      // to local network tables test server or roborio (which will happen by default
-      // without --nthost command line option)
-      runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar --team 997 --nthost localhost --cameraurl \"http://localhost:1337/mjpeg_stream\""
-      def runDebugFile = new File("${buildDir}/run${projectName}-debug.sh")
-      runDebugFile.write "java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=1044 -Djava.library.path=. -jar ${projectName}-all.jar --team 997 --nthost localhost --cameraurl \"http://localhost:1337/mjpeg_stream\""
-    }
-  }
-}
-
-task copyToOutput(type: Copy) {
-  dependsOn shadowJar
-  dependsOn unzipOpenCv
-  dependsOn writeExecuteScript
-  destinationDir = outputDirectory
-  from (file(shadowJar.archivePath)) {
-  }
-  from (openCvUnzipLocation) {
-    exclude 'META-INF'
-    exclude '**/MANIFEST.MF'
-  }
-  if (buildType == "windows") {
-    from (file("${buildDir}/run${projectName}.bat")) {
-    }
-  } else {
-    from (file("${buildDir}/run${projectName}.sh")) {
-    }
-    from (file("${buildDir}/run${projectName}-debug.sh")) {
-    }
-  }
-}
-
 task zipOutput(type: Zip) {
-  baseName = projectName
+  baseName = "${projectName}-all"
   duplicatesStrategy = 'exclude'
   dependsOn shadowJar
   dependsOn unzipOpenCv
-  destinationDir = outputDirectory
+  destinationDir = file("${buildDir}/distributions")
   from (file(shadowJar.archivePath)) {
   }
   from (openCvUnzipLocation) {
@@ -121,10 +110,13 @@ task zipOutput(type: Zip) {
     exclude '**/MANIFEST.MF'
   }
   if (buildType == "windows") {
-    from (file("${buildDir}/run${projectName}.bat")) {
+    from (file("${scriptsDir}/run${projectName}.bat")) {
     }
   } else {
-    from (file("${buildDir}/run${projectName}.sh")) {
+    from (file("${scriptsDir}/run${projectName}.sh")) {
+      fileMode 0777
+    }
+    from (file("${scriptsDir}/run${projectName}-debug.sh")) {
       fileMode 0777
     }
   }
@@ -135,6 +127,5 @@ distTar.dependsOn unzipOpenCv
 
 applicationDefaultJvmArgs = ["-Djava.library.path=${openCvUnzipLocation}"]
 
-build.dependsOn copyToOutput
 build.dependsOn zipOutput
 run.dependsOn unzipOpenCv

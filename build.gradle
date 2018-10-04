@@ -14,8 +14,9 @@ allprojects {
 
     ext.buildType = project.hasProperty('target') ? project.property('target') : 'windows'
 
-    ext.outputDirectory = file("${rootDir}/output")
 }
+
+def binDirectory = file("${rootDir}/bin")
 
 remotes {
     piccb {
@@ -35,7 +36,7 @@ build.dependsOn ':CameraServer:build', ':CameraVision:build', ':NTSimulator:buil
 
 task copyStartupScript(type: Copy) {
   description "Copies the startup application to the root output directory."
-  destinationDir = outputDirectory
+  destinationDir = binDirectory
   if (buildType == "windows") {
     from (file("startup.bat")) {
     }
@@ -54,9 +55,9 @@ task copyStartupScript(type: Copy) {
 build.dependsOn copyStartupScript
 
 clean {
-    inputs.dir outputDirectory
-    description "Remove the root output directory."
-    delete outputDirectory
+    inputs.dir binDirectory
+    description "Remove the root bin directory."
+    delete binDirectory
 }
 
 // Make the deploy task accept a parameter that will tell below which remote

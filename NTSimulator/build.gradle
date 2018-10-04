@@ -7,7 +7,7 @@
 
 buildscript {
   dependencies {
-    classpath files("../bin/lib/pygrad-0.1.10-ccb.jar")
+    classpath files("../classlib/pygrad-0.1.10-ccb.jar")
   }
 }
 

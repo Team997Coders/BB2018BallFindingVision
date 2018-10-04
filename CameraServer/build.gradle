@@ -4,7 +4,7 @@
 
 buildscript {
   dependencies {
-    classpath files("../bin/lib/pygrad-0.1.10-ccb.jar")
+    classpath files("../classlib/pygrad-0.1.10-ccb.jar")
   }
 }
 
@@ -20,7 +20,7 @@ build.dependsOn pyenv
 /*
 task copyToOutput(type: Copy) {
   description "Copies the applications to the root output directory."
-  destinationDir = outputDirectory
+  destinationDir = binDirectory
   from (file("live-mjpeg-stream.py")) {
   }
   if (buildType == "windows") {

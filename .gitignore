@@ -156,12 +156,6 @@ gradle-app.setting
 .settings/
 bin/
 
-# # For this project, ignore output directory
-output/
-
-# Ignore python virtual environments
-.venv/
-
 # Ignore python egg directories
 *.egg-info/
 
