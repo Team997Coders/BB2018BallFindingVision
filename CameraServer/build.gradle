@@ -1,6 +1,7 @@
 // Required to be pre-installed to build: Python3
 // Required to be pre-installed to run: gstreamer
 // TODO: Is this easily automatable?
+// TODO: Can we just embed the running of gstreamer into python app?
 
 buildscript {
   dependencies {
@@ -16,21 +17,3 @@ python {
 }
 
 build.dependsOn pyenv
-
-/*
-task copyToOutput(type: Copy) {
-  description "Copies the applications to the root output directory."
-  destinationDir = binDirectory
-  from (file("live-mjpeg-stream.py")) {
-  }
-  if (buildType == "windows") {
-      from(file("stream-camera.bat"))
-  } else {
-      from(file("stream-camera.sh"))
-      from(file("set-camera.sh"))
-  }
-}
-
-assemble.dependsOn copyToOutput
-build.dependsOn pipInstall
-*/

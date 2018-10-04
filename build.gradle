@@ -1,6 +1,7 @@
-// Adds empty build, clean, and assemble tasks to project
 plugins {
+    // Adds empty build, clean, and assemble tasks to project
     id 'base'
+    // Simple way to push apps to raspberry pi
     id 'org.hidetake.ssh' version '2.9.0'
 }
 
@@ -11,12 +12,16 @@ allprojects {
     // If development of Windows and targeting windows, simply do:
     // gradlew build
     // valid targets = windows (default), arm-raspbian, armhf
+    // Also note that the python apps build source distributions only, so
+    // it does not matter which target is selected for those.  'pip install'
+    // will work appropriately regardless of the target platform.
 
     ext.buildType = project.hasProperty('target') ? project.property('target') : 'windows'
-
 }
 
 def binDirectory = file("${rootDir}/bin")
+def scriptsDirectory = "${rootDir}/scripts"
+def pythonDirectory = "${binDirectory}/python"
 
 remotes {
     piccb {
@@ -32,27 +37,65 @@ ssh.settings {
 }
 
 // Normally this is implicit with java plugin, but base plugin makes no sub-project assumptions
-build.dependsOn ':CameraServer:build', ':CameraVision:build', ':NTSimulator:build'
+build.dependsOn ':CameraServer:pydist', ':CameraVision:build', ':NTSimulator:pydist'
 
 task copyStartupScript(type: Copy) {
-  description "Copies the startup application to the root output directory."
+  description "Copies the startup application to the root bin directory."
   destinationDir = binDirectory
   if (buildType == "windows") {
-    from (file("startup.bat")) {
+    from (file("${scriptsDirectory}/startup.bat")) {
     }
-    from (file("local-debug-startup.bat")) {
+    from (file("${scriptsDirectory}/local-debug-startup.bat")) {
     }
   } else {
-    from (file("startup.sh")) {
+    from (file("${scriptsDirectory}/startup.sh")) {
     }
-    from (file("startup-debug.sh")) {
+    from (file("${scriptsDirectory}/startup-debug.sh")) {
     }
-    from (file("local-debug-startup.sh")) {
+    from (file("${scriptsDirectory}/local-debug-startup.sh")) {
     }
   }
 }
 
+task buildPythonVirtualEnvironment(type: Exec) {
+  // Assumption: venv is installed...which it is for the binary msi version of Python I got for Windows
+  description "Creates a virtual python environment in the root bin directory."
+  outputs.dir "${pythonDirectory}"
+  commandLine "python", "-m", "venv", "--clear", "${pythonDirectory}"
+}
+
+task installIPCameraApp(type: Exec) {
+    dependsOn ':CameraServer:pydist'
+    commandLine "${pythonDirectory}/Scripts/pip", "install", "--upgrade", "--find-links", "file://${rootProject.projectDir}/CameraServer/build/python/dist", "ipcamera"
+    doLast {
+        copy {
+            into binDirectory
+            if (buildType == "windows") {
+                from(file("./CameraServer/stream-camera.bat"))
+            } else {
+                from(file("./CameraServer/stream-camera.sh"))
+                from(file("./CameraServer/set-camera.sh"))
+            }
+        }
+    }
+}
+
+task installNTServerApp(type: Exec) {
+  dependsOn ':NTSimulator:pydist'
+  commandLine "${pythonDirectory}/Scripts/pip", "install", "--upgrade", "--find-links", "file://${rootProject.projectDir}/NTSimulator/build/python/dist", "ntserver"
+}
+
+task installVisionApp(type: Copy) {
+  dependsOn ':CameraVision:build'
+  from zipTree("${rootProject.projectDir}/CameraVision/build/distributions/CameraVision-all.zip")
+  into binDirectory
+}
+
 build.dependsOn copyStartupScript
+build.dependsOn buildPythonVirtualEnvironment
+build.dependsOn installIPCameraApp
+build.dependsOn installNTServerApp
+build.dependsOn installVisionApp
 
 clean {
     inputs.dir binDirectory
@@ -65,12 +108,12 @@ clean {
 task deploy(dependsOn: build) {
     doLast {
         if (buildType == "windows") {
-            println "Windows deployment not coded at this time."
+            println "Windows deployment not coded at this time.  You can run locally at ${binDirectory}"
         } else {
             ssh.run {
                 session(remotes.piccb) {
                     // Install dependencies
-                    // This should bring up project from a fresh raspbian install.
+                    // This should bring up this project from a fresh raspbian install.
                     // You must have ssh installed first using `sudo raspi-config`.
                     // Will this work on the robo-rio?
                     // Doubt it...don't know...must test.
@@ -84,13 +127,13 @@ task deploy(dependsOn: build) {
                         executeSudo 'apt-get --assume-yes install python3-pip'
                         executeSudo 'apt-get --assume-yes install oracle-java8-jdk'
                         executeSudo 'apt-get --assume-yes install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools'
-                        execute 'pip3 install -U pynetworktables'
                     } catch (Exception e)
                     {
                         println "Could not install dependencies.  Connected to Internet?"
                     }
                     // Now copy the build
                     put from: 'output', into: '/home/pi'
+                    execute 'pip3 install -U pynetworktables'
                     execute 'chmod u+x /home/pi/output/*.sh'
                     execute 'dos2unix /home/pi/output/*.sh'
                 }
