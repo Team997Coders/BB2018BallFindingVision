@@ -2,6 +2,8 @@ plugins {
     // Adds empty build, clean, and assemble tasks to project
     id 'base'
     // Simple way to push apps to raspberry pi
+    // Big shout out to https://github.com/int128/gradle-ssh-plugin
+    // for enabling interaction to remote system over ssh using gradle.  Nice!
     id 'org.hidetake.ssh' version '2.9.0'
 }
 
@@ -132,10 +134,15 @@ task deploy(dependsOn: build) {
                         println "Could not install dependencies.  Connected to Internet?"
                     }
                     // Now copy the build
-                    put from: 'output', into: '/home/pi'
-                    execute 'pip3 install -U pynetworktables'
-                    execute 'chmod u+x /home/pi/output/*.sh'
-                    execute 'dos2unix /home/pi/output/*.sh'
+                    execute 'mkdir -p /home/pi/bin'
+                    execute 'mkdir -p /home/pi/sw'
+                    put from: fileTree(binDirectory).matching { exclude 'python/**'}, into: '/home/pi/bin'
+                    put from: fileTree(dir: "${rootProject.projectDir}/CameraServer/build/python/dist"), into: '/home/pi/sw'
+                    put from: fileTree(dir: "${rootProject.projectDir}/NTSimulator/build/python/dist"), into: '/home/pi/sw'
+                    // Install the build
+                    execute 'pip3 install -U --find-links file:///home/pi/sw ntserver ipcamera'
+                    execute 'chmod u+x /home/pi/bin/*.sh'
+                    execute 'dos2unix /home/pi/bin/*.sh'
                 }
             }
         }
