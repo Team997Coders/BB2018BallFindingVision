@@ -2,8 +2,9 @@
 
 This is a sample project based on the [WPILib sample build system](https://github.com/wpilibsuite/VisionBuildSamples) for building Java based vision targeting for running on systems other than the roboRIO. The object of this project is to make it easy to design, develop, code, test, and deploy FIRST WPILib vision processing apps from a Windows workstation. This project currently supports the following target platforms with a Windows development environment:
 
-* Windows
+* Windows on x86 or x86_64
 * Raspberry Pi running Raspbian
+* Linux on x86 or x86_64 - not tested
 * Generic Armhf devices (such as the BeagleBone Black or the Jetson) - not tested
 
 ## Windows development system requirements
