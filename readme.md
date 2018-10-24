@@ -64,4 +64,4 @@ The build script provides a few other configuration options. These include selec
 Please see the `build.gradle` file for where to change these. 
 
 ## Further Documentation
-Youtube videos are located on the [Spartan Robotics](https://www.youtube.com/channel/UCekeDJzimFuocARIjuiDrGQ) youtube channel.  These further describe the system architecture, the project, provide a code walkthrough, discuss the gradle build system, and introduce automated testing.
+Youtube videos are located on the [Spartan Robotics](https://www.youtube.com/channel/UCekeDJzimFuocARIjuiDrGQ) Youtube channel.  These further describe the [system architecture](https://docs.google.com/drawings/d/1QBvX5yAShsnoBBzIV375vycgUSIo_4coL-5SogxS-IU), the project, provide a code walkthrough, discuss the gradle build system, and introduce automated testing.
