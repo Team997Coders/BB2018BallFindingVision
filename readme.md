@@ -38,18 +38,20 @@ Instead, this sample has been expanded to use a utility [gstreamer](https://gstr
 Further, an [MJPEG streaming server](https://github.com/Team997Coders/BB2018BallFindingVision/tree/master/CameraServer) is included to make it possible for the image processing application to simply reference a streaming source over HTTP using the WPILib HttpCamera class, even if you do not have a network camera.  This streaming source can be from a local USB camera, or you can offload image streaming to a another device and separate image processing from streaming.  Keep your source code the same regardless of where your camera is.
 
 ## Building and running on the local development workstation
-You can run `gradlew build` to run a build for a Windows target.
+You can run `gradlew build` to run a build for a Windows target.  First, be sure to modify the constants at the top of the CameraVision/build.gradle file per the comments.
 
-When doing this, the output files will be placed into `bin\`. From there, you can run either the .bat file on windows or the shell script on unix in order to run your project.  Note that Linux workstations have not been tested yet, but should work.
+When doing this, the output files will be placed into `bin\`. From there, you can run either the .bat file on windows or the shell script on unix in order to run your project.  Note that Linux workstations have not been tested yet (should work - someone want to help me test?).
 
-You can also run the project from the VSCode debugger locally and remotely using the built-in task and launch settings. (TODO: Put more in about this)
+You can also run the project from the VSCode debugger locally and remotely using the built-in task and launch settings.
+
+To debug locally, check the comments in the CameraVision/.vscode/launch.json and tasks.json files.  Then, from the debug pane, launch "Debug (Launch)-Main<CameraVision>".  A build will run, then the network tables simulator and the webcam streaming apps will start.  Finally, the CameraVision project will start in the interactive debugger.
 
 ## Building for another platform
 If you are building for another platform, trying to run `gradlew build -Ptarget=<target>` will not work, as tests will not run on Windows targeting another platform.  You can run `gradlew build -x test -Ptarget=<target>` to ignore tests.
 
 In that case, when you run the build, runtimes for the target selected will be placed in `bin\`. All you have to do is copy this file to the target system, excluding the virtual python directory, then run the .bat or shell script to run your program.  You will also need to install the python packages built in the CameraServer and NTSimulator project directories `./build/python/dist`.  Those packages can be installed with `pip3 install -U <package.zip>`.
 
-Finally, if buildType is targeting raspbian, a `gradlew deploy -x test -Ptarget="arm-raspbian"` task exists to build and deploy the project automatically to a raspberry pi.  No dependencies are required to be installed on the pi other than the stretch distro.  The deploy task will automatically install them. (TODO: Talk more about the settings on connecting to pi.)
+Finally, if buildType is targeting raspbian, a `gradlew deploy -x test -Ptarget="arm-raspbian"` task exists to build and deploy the project automatically to a raspberry pi.  No dependencies are required to be installed on the pi other than the stretch distro.  The deploy task will automatically install them.  Edit the root build.gradle file and change the remotes section to identify the host, username, and password of the target Raspberry Pi.
 
 ## What this gives you
 You can develop and test a WPILib image processing application without needing a robot.  You can develop and test on Windows and then deploy on a raspberry pi.  You can use a USB camera on either platform locally, or you can offload image capture to another device and not change image processing code.

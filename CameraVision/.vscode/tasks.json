@@ -6,25 +6,32 @@
     // Note: I'd like these dependencies tp run in debug mode
     // but, VSCode does not provide an async
     //
+
+    // The arg to the local-debug-startup.bat file is the zero-based USB camera number
+    // you want to stream images for processing.  Typically it is 0, but on my wks,
+    // it is one because I have multiple cameras.
     "version": "2.0.0",
     "tasks": [
         {
             "label": "Local Debug Startup",
             "type": "shell",
-            "command": "local-debug-startup.bat",,
+            "command": "./local-debug-startup.bat",
             "dependsOn": "build",
             "args": [
                 "1"
             ],
             "options": {
-                "cwd": "${workspaceFolder}\\output"                
+                "cwd": "${workspaceFolder}\\..\\bin"
             }
         },
         {
             "label": "build",
             "type": "shell",
-            "command": "gradlew build",
-            "args": []
+            "command": "./gradlew build",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}\\.."
+            }
         }
     ]
 }

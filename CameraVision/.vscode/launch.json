@@ -2,6 +2,10 @@
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+
+    // Fill in your team number below, network tables host if different from localhost,
+    // and MJPEG HTTP server if different from running locally.  If wanting to write
+    // to roboRio network tables in debug mode, remove the --nthost parameter. 
     "version": "0.2.0",
     "configurations": [
         {
@@ -11,7 +15,7 @@
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopOnEntry": false,
-            "vmArgs": "-Djava.library.path=${workspaceFolder}\\CameraVision\\output", 
+            "vmArgs": "-Djava.library.path=${workspaceFolder}\\..\\bin", 
             "mainClass": "Main",
             "args": "--team 997 --nthost localhost --cameraurl http://localhost:1337/mjpeg_stream",
             "preLaunchTask": "Local Debug Startup",
