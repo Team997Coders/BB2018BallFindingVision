@@ -44,7 +44,9 @@ When doing this, the output files will be placed into `bin\`. From there, you ca
 
 You can also run the project from the VSCode debugger locally and remotely using the built-in task and launch settings.
 
-To debug locally, check the comments in the CameraVision/.vscode/launch.json and tasks.json files.  Then, from the debug pane, launch "Debug (Launch)-Main<CameraVision>".  A build will run, then the network tables simulator and the webcam streaming apps will start.  Finally, the CameraVision project will start in the interactive debugger.
+To debug locally, check the comments in the CameraVision/.vscode/launch.json and tasks.json files.  Then, from the debug pane, launch `Debug (Launch)-Main<CameraVision>`.  A build will run, then the network tables simulator and the webcam streaming apps will start.  Finally, the CameraVision project will start in the interactive debugger.
+
+To debug remotely from a workstation to the CameraVision application running on a Raspberry Pi, check the comments in the CameraVision/.vscode/launch.json file.  Run a build and deploy using the appropriate target (see next section).  Login in to the remote system and run `bin/startup-debug.sh`.  Then, from the debug pane, launch `Debug visioncoproc.local (Attach) (CameraVision)`.
 
 ## Building for another platform
 If you are building for another platform, trying to run `gradlew build -Ptarget=<target>` will not work, as tests will not run on Windows targeting another platform.  You can run `gradlew build -x test -Ptarget=<target>` to ignore tests.

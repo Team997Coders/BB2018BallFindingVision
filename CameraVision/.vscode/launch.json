@@ -6,6 +6,9 @@
     // Fill in your team number below, network tables host if different from localhost,
     // and MJPEG HTTP server if different from running locally.  If wanting to write
     // to roboRio network tables in debug mode, remove the --nthost parameter. 
+
+    // To debug remotely, fill in the hostname below in the Attach configuration to match
+    // the hostname of the remote system.
     "version": "0.2.0",
     "configurations": [
         {
