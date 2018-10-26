@@ -19,13 +19,13 @@
       <grip:Input step="1" socket="0"/>
       <grip:Input step="1" socket="1">
         <value>
-          <double>105.2158273381295</double>
+          <double>58.27338129496404</double>
           <double>180.0</double>
         </value>
       </grip:Input>
       <grip:Input step="1" socket="2">
         <value>
-          <double>213.26438848920867</double>
+          <double>137.58992805755398</double>
           <double>255.0</double>
         </value>
       </grip:Input>
@@ -46,7 +46,7 @@
       <grip:Input step="3" socket="0"/>
       <grip:Input step="3" socket="1">
         <value>
-          <double>55.03597122302158</double>
+          <double>45.86330935251798</double>
           <double>255.0</double>
         </value>
       </grip:Input>
@@ -62,7 +62,7 @@
           <double>255.0</double>
         </value>
       </grip:Input>
-      <grip:Output step="3" socket="0" previewed="true"/>
+      <grip:Output step="3" socket="0" previewed="false"/>
     </grip:Step>
     <grip:Step name="Find Blobs">
       <grip:Input step="4" socket="0"/>
@@ -83,28 +83,28 @@
   </steps>
   <connections>
     <grip:Connection>
-      <grip:Output source="0" socket="0" previewed="true"/>
-      <grip:Input step="0" socket="0"/>
-    </grip:Connection>
-    <grip:Connection>
-      <grip:Output step="3" socket="0" previewed="true"/>
-      <grip:Input step="4" socket="0"/>
+      <grip:Output step="1" socket="0" previewed="false"/>
+      <grip:Input step="2" socket="1"/>
     </grip:Connection>
     <grip:Connection>
       <grip:Output step="0" socket="0" previewed="false"/>
       <grip:Input step="2" socket="0"/>
     </grip:Connection>
     <grip:Connection>
-      <grip:Output step="2" socket="0" previewed="false"/>
-      <grip:Input step="3" socket="0"/>
+      <grip:Output source="0" socket="0" previewed="true"/>
+      <grip:Input step="0" socket="0"/>
+    </grip:Connection>
+    <grip:Connection>
+      <grip:Output step="3" socket="0" previewed="false"/>
+      <grip:Input step="4" socket="0"/>
     </grip:Connection>
     <grip:Connection>
       <grip:Output step="0" socket="0" previewed="false"/>
       <grip:Input step="1" socket="0"/>
     </grip:Connection>
     <grip:Connection>
-      <grip:Output step="1" socket="0" previewed="false"/>
-      <grip:Input step="2" socket="1"/>
+      <grip:Output step="2" socket="0" previewed="false"/>
+      <grip:Input step="3" socket="0"/>
     </grip:Connection>
   </connections>
   <settings>
@@ -118,10 +118,10 @@
   </settings>
   <codeGenerationSettings>
     <language>Java</language>
-    <className>BlueBallGripPipeline</className>
+    <className>RedBallGripPipeline</className>
     <implementWpilibPipeline>false</implementWpilibPipeline>
-    <saveDir>C:\Users\chuck\GRIP</saveDir>
-    <packageName>frc.team997.bunnybot</packageName>
+    <saveDir>C:\Users\chuck\Documents\BB2018BallFindingVision\CameraVision\src\main\java</saveDir>
+    <packageName></packageName>
     <moduleName>grip</moduleName>
   </codeGenerationSettings>
 </grip:Pipeline>

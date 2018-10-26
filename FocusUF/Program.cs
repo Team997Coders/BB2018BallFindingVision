@@ -44,9 +44,9 @@ namespace FocusUF
                     {
                         _camera.Set(CameraControlProperty.Focus, v, CameraControlFlags.Manual);
                     }
+//                    _camera.Set(CameraControlProperty.Exposure, 20, CameraControlFlags.Auto);
                 }
             }
-
         }
     }
 }

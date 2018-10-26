@@ -5,10 +5,12 @@ import edu.wpi.first.wpilibj.tables.*;
 import edu.wpi.cscore.*;
 import edu.wpi.cscore.HttpCamera.HttpCameraKind;
 
+import org.opencv.core.Core;
+import org.opencv.core.KeyPoint;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.features2d.Features2d;
-//import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Imgproc;
 
 import com.beust.jcommander.*;
 
@@ -170,7 +172,17 @@ public class Main {
         outputImage2, 
         new Scalar(2,254,255),              // yellowish circle 
         Features2d.DRAW_RICH_KEYPOINTS);    // draws a full-sized circle around found point(s)
-  
+      
+      // Ident blue balls on image
+      for (KeyPoint k : bluePipeline.findBlobsOutput().toArray()) {
+        Imgproc.putText(outputImage2, "Blue", k.pt, Core.FONT_HERSHEY_COMPLEX_SMALL, .75, new Scalar(2,254,255));
+      }
+
+      // Ident red balls on image
+      for (KeyPoint k : redPipeline.findBlobsOutput().toArray()) {
+        Imgproc.putText(outputImage2, "Red", k.pt, Core.FONT_HERSHEY_COMPLEX_SMALL, .75, new Scalar(2,254,255));
+      }
+      
       // Spit the image out to the stream.
       imageSource.putFrame(outputImage2);
     }

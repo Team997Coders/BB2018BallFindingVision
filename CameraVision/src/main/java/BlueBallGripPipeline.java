@@ -1,20 +1,18 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-/*
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.HashMap;
-*/
 
 import org.opencv.core.*;
-//import org.opencv.core.Core.*;
+import org.opencv.core.Core.*;
 import org.opencv.features2d.FeatureDetector;
-//import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.*;
-//import org.opencv.objdetect.*;
+import org.opencv.objdetect.*;
 
 /**
 * BlueBallGripPipeline class.
@@ -48,8 +46,8 @@ public class BlueBallGripPipeline {
 
 		// Step HSV_Threshold0:
 		Mat hsvThresholdInput = blurOutput;
-		double[] hsvThresholdHue = {105.2158273381295, 180.0};
-		double[] hsvThresholdSaturation = {213.26438848920867, 255.0};
+		double[] hsvThresholdHue = {89.02877697841727, 180.0};
+		double[] hsvThresholdSaturation = {188.03956834532377, 255.0};
 		double[] hsvThresholdValue = {0.0, 255.0};
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
@@ -61,8 +59,8 @@ public class BlueBallGripPipeline {
 		// Step RGB_Threshold0:
 		Mat rgbThresholdInput = maskOutput;
 		double[] rgbThresholdRed = {0.0, 255.0};
-		double[] rgbThresholdGreen = {22.93165467625899, 255.0};
-		double[] rgbThresholdBlue = {45.86330935251798, 255.0};
+		double[] rgbThresholdGreen = {36.690647482014384, 255.0};
+		double[] rgbThresholdBlue = {119.24460431654676, 255.0};
 		rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, rgbThresholdOutput);
 
 		// Step Find_Blobs0:
