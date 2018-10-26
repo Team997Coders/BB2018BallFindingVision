@@ -1,18 +1,20 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+/*
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.HashMap;
+*/
 
 import org.opencv.core.*;
-import org.opencv.core.Core.*;
+//import org.opencv.core.Core.*;
 import org.opencv.features2d.FeatureDetector;
-import org.opencv.imgcodecs.Imgcodecs;
+//import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.*;
-import org.opencv.objdetect.*;
+//import org.opencv.objdetect.*;
 
 /**
 * RedBallGripPipeline class.
@@ -25,10 +27,9 @@ public class RedBallGripPipeline {
 
 	//Outputs
 	private Mat blurOutput = new Mat();
-	private Mat hslThresholdOutput = new Mat();
+	private Mat hsvThresholdOutput = new Mat();
 	private Mat maskOutput = new Mat();
 	private Mat rgbThresholdOutput = new Mat();
-	private Mat cvErodeOutput = new Mat();
 	private MatOfKeyPoint findBlobsOutput = new MatOfKeyPoint();
 
 	static {
@@ -42,19 +43,19 @@ public class RedBallGripPipeline {
 		// Step Blur0:
 		Mat blurInput = source0;
 		BlurType blurType = BlurType.get("Box Blur");
-		double blurRadius = 10.81081081081081;
+		double blurRadius = 9.00900900900901;
 		blur(blurInput, blurType, blurRadius, blurOutput);
 
-		// Step HSL_Threshold0:
-		Mat hslThresholdInput = blurOutput;
-		double[] hslThresholdHue = {84.17266187050359, 180.0};
-		double[] hslThresholdSaturation = {167.4010791366906, 255.0};
-		double[] hslThresholdLuminance = {25.22482014388489, 255.0};
-		hslThreshold(hslThresholdInput, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance, hslThresholdOutput);
+		// Step HSV_Threshold0:
+		Mat hsvThresholdInput = blurOutput;
+		double[] hsvThresholdHue = {105.2158273381295, 180.0};
+		double[] hsvThresholdSaturation = {213.26438848920867, 255.0};
+		double[] hsvThresholdValue = {0.0, 255.0};
+		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
 		// Step Mask0:
 		Mat maskInput = blurOutput;
-		Mat maskMask = hslThresholdOutput;
+		Mat maskMask = hsvThresholdOutput;
 		mask(maskInput, maskMask, maskOutput);
 
 		// Step RGB_Threshold0:
@@ -64,17 +65,8 @@ public class RedBallGripPipeline {
 		double[] rgbThresholdBlue = {0.0, 255.0};
 		rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, rgbThresholdOutput);
 
-		// Step CV_erode0:
-		Mat cvErodeSrc = rgbThresholdOutput;
-		Mat cvErodeKernel = new Mat();
-		Point cvErodeAnchor = new Point(-1, -1);
-		double cvErodeIterations = 9.0;
-		int cvErodeBordertype = Core.BORDER_DEFAULT;
-		Scalar cvErodeBordervalue = new Scalar(-1);
-		cvErode(cvErodeSrc, cvErodeKernel, cvErodeAnchor, cvErodeIterations, cvErodeBordertype, cvErodeBordervalue, cvErodeOutput);
-
 		// Step Find_Blobs0:
-		Mat findBlobsInput = cvErodeOutput;
+		Mat findBlobsInput = rgbThresholdOutput;
 		double findBlobsMinArea = 150.0;
 		double[] findBlobsCircularity = {0.737410071942446, 1.0};
 		boolean findBlobsDarkBlobs = false;
@@ -91,11 +83,11 @@ public class RedBallGripPipeline {
 	}
 
 	/**
-	 * This method is a generated getter for the output of a HSL_Threshold.
-	 * @return Mat output from HSL_Threshold.
+	 * This method is a generated getter for the output of a HSV_Threshold.
+	 * @return Mat output from HSV_Threshold.
 	 */
-	public Mat hslThresholdOutput() {
-		return hslThresholdOutput;
+	public Mat hsvThresholdOutput() {
+		return hsvThresholdOutput;
 	}
 
 	/**
@@ -112,14 +104,6 @@ public class RedBallGripPipeline {
 	 */
 	public Mat rgbThresholdOutput() {
 		return rgbThresholdOutput;
-	}
-
-	/**
-	 * This method is a generated getter for the output of a CV_erode.
-	 * @return Mat output from CV_erode.
-	 */
-	public Mat cvErodeOutput() {
-		return cvErodeOutput;
 	}
 
 	/**
@@ -197,19 +181,19 @@ public class RedBallGripPipeline {
 	}
 
 	/**
-	 * Segment an image based on hue, saturation, and luminance ranges.
+	 * Segment an image based on hue, saturation, and value ranges.
 	 *
 	 * @param input The image on which to perform the HSL threshold.
 	 * @param hue The min and max hue
 	 * @param sat The min and max saturation
-	 * @param lum The min and max luminance
+	 * @param val The min and max value
 	 * @param output The image in which to store the output.
 	 */
-	private void hslThreshold(Mat input, double[] hue, double[] sat, double[] lum,
-		Mat out) {
-		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HLS);
-		Core.inRange(out, new Scalar(hue[0], lum[0], sat[0]),
-			new Scalar(hue[1], lum[1], sat[1]), out);
+	private void hsvThreshold(Mat input, double[] hue, double[] sat, double[] val,
+	    Mat out) {
+		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HSV);
+		Core.inRange(out, new Scalar(hue[0], sat[0], val[0]),
+			new Scalar(hue[1], sat[1], val[1]), out);
 	}
 
 	/**
@@ -237,30 +221,6 @@ public class RedBallGripPipeline {
 		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2RGB);
 		Core.inRange(out, new Scalar(red[0], green[0], blue[0]),
 			new Scalar(red[1], green[1], blue[1]), out);
-	}
-
-	/**
-	 * Expands area of lower value in an image.
-	 * @param src the Image to erode.
-	 * @param kernel the kernel for erosion.
-	 * @param anchor the center of the kernel.
-	 * @param iterations the number of times to perform the erosion.
-	 * @param borderType pixel extrapolation method.
-	 * @param borderValue value to be used for a constant border.
-	 * @param dst Output Image.
-	 */
-	private void cvErode(Mat src, Mat kernel, Point anchor, double iterations,
-		int borderType, Scalar borderValue, Mat dst) {
-		if (kernel == null) {
-			kernel = new Mat();
-		}
-		if (anchor == null) {
-			anchor = new Point(-1,-1);
-		}
-		if (borderValue == null) {
-			borderValue = new Scalar(-1);
-		}
-		Imgproc.erode(src, dst, kernel, anchor, (int)iterations, borderType, borderValue);
 	}
 
 	/**
