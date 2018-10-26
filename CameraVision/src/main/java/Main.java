@@ -123,9 +123,14 @@ public class Main {
     // All Mats and Lists should be stored outside the loop to avoid allocations
     // as they are expensive to create
     Mat inputImage = new Mat();
-    Mat outputImage = new Mat();
-    BlueBallGripPipeline pipeline = new BlueBallGripPipeline();
-    BlueBallGripPipelineInterpreter interpreter = new BlueBallGripPipelineInterpreter(pipeline);
+    Mat outputImage1 = new Mat();
+    Mat outputImage2 = new Mat();
+    // This duplication could be ditched with a common interface, but then the
+    // generated pipelines would have to be modified.
+    BlueBallGripPipeline bluePipeline = new BlueBallGripPipeline();
+    BlueBallGripPipelineInterpreter blueInterpreter = new BlueBallGripPipelineInterpreter(bluePipeline);
+    RedBallGripPipeline redPipeline = new RedBallGripPipeline();
+    RedBallGripPipelineInterpreter redInterpreter = new RedBallGripPipelineInterpreter(redPipeline);
     NetworkTable publishingTable = NetworkTable.getTable("SmartDashboard");
     System.out.println("Processing stream...");
     
@@ -140,24 +145,34 @@ public class Main {
       }
 
       // Apply the pipeline to the image.
-      pipeline.process(inputImage);
+      bluePipeline.process(inputImage);
+      redPipeline.process(inputImage);
 
       // Update network table
       if (!noNT) {
-        publishingTable.putBoolean("BlueBall", interpreter.ballsFound());
+        publishingTable.putBoolean("BlueBallFound", blueInterpreter.ballsFound());
+        publishingTable.putNumber("BlueBallCount", blueInterpreter.ballCount());
+        publishingTable.putBoolean("RedBallFound", redInterpreter.ballsFound());
+        publishingTable.putNumber("RedBallCount", redInterpreter.ballCount());
       }
 
       // Write a processed image that you want to restream
       // This is a marked up image of what the camera sees
       Features2d.drawKeypoints(
         inputImage, 
-        pipeline.findBlobsOutput(), 
-        outputImage, 
+        bluePipeline.findBlobsOutput(), 
+        outputImage1, 
         new Scalar(2,254,255),              // yellowish circle 
         Features2d.DRAW_RICH_KEYPOINTS);    // draws a full-sized circle around found point(s)
-
+      Features2d.drawKeypoints(
+        outputImage1, 
+        redPipeline.findBlobsOutput(), 
+        outputImage2, 
+        new Scalar(2,254,255),              // yellowish circle 
+        Features2d.DRAW_RICH_KEYPOINTS);    // draws a full-sized circle around found point(s)
+  
       // Spit the image out to the stream.
-      imageSource.putFrame(outputImage);
+      imageSource.putFrame(outputImage2);
     }
   }
 
