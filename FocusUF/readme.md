@@ -11,3 +11,7 @@ This project only works on Windows, and only for the LifeCam 5000 camera.
 It would be great to unify this project to work under all platforms, since this requirement exists everywhere.
 
 This project does not use gradle for building.  To build, do `dotnet build`.  To run, do `dotnet run`.
+
+# Credits
+
+This project was based on the work [here](https://github.com/anotherlab/FocusUF) but was converted to build with VSCode.

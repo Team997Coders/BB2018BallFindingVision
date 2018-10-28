@@ -10,3 +10,7 @@ The command line utility is built, using `gradlew build`, into a pip package and
 # Dependencies
 1. Python3
 2. gstreamer
+
+# Credits
+1. [http://synack.me/blog/implementing-http-live-streaming](http://synack.me/blog/implementing-http-live-streaming)
+2. [https://gist.github.com/sakti/4761739](https://gist.github.com/sakti/4761739)
