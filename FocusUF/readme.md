@@ -8,6 +8,6 @@ The camera has an annoying habit of a slow and repeated autofocus sequence, whic
 
 This project only works on Windows, and only for the LifeCam 5000 camera.
 
-It would be greate to unify this project to work under all platforms, since this requirement exists everywhere.
+It would be great to unify this project to work under all platforms, since this requirement exists everywhere.
 
 This project does not use gradle for building.  To build, do `dotnet build`.  To run, do `dotnet run`.
