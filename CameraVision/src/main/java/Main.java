@@ -12,62 +12,41 @@ import org.opencv.core.Scalar;
 import org.opencv.features2d.Features2d;
 import org.opencv.imgproc.Imgproc;
 
-import com.beust.jcommander.*;
-
 public class Main {
 
-  // command line args
-  @Parameter(names={"--team", "-t"}, required=true, description="FIRST team number")
-  int team;
-  @Parameter(names={"--nthost", "-h"},  
-    description="NetworkTables server host IP address (for testing)")
-  String ntHost = "";
-  @Parameter(names={"--nont", "-n"},  
-    description="Do not call out to network tables to write interpreted values")
-  boolean noNT = false;
-  @Parameter(names={"--cameraurl", "-c"},  
-    description="Use specified MJPEG over http streaming source (overrides NetworkTables value)")
-  String cameraURL = "";
-  @Parameter(names = "--help", help = true)
-  boolean help = false;
-
   public static void main(String ... argv) {
-      Main main = new Main();
-      // parse command line args
-      JCommander jc = JCommander.newBuilder()
-        .programName("CameraVision")
-        .addObject(main)
-        .build();
-
-      try {
-        jc.parse(argv);
-        if (main.help) {
-          jc.usage();
-        } else {
-          // run the app
-          main.run();
-        }
-      } catch (ParameterException pe)
-      {
-        // print the parameter error, show the usage, and bail
-        System.out.println(pe.getMessage());
-        jc.usage();
-        System.exit(1);        
+    Main main = new Main();
+    RuntimeSettings runtimeSettings = new RuntimeSettings(argv);
+    if (runtimeSettings.parse()) {
+      if (runtimeSettings.getHelp()) {
+        // print out the usage to sysout
+        runtimeSettings.printUsage();
+      } else {
+        // run the app
+        main.run(runtimeSettings);
+        System.exit(0);
       }
+    } else {
+      // print the parameter error, show the usage, and bail
+      System.err.println(runtimeSettings.getParseErrorMessage());
+      runtimeSettings.printUsage();
+      System.exit(1);
+    }
   }
 
-  public void run() {
+  public void run(RuntimeSettings runtimeSettings) {
     // Loads our OpenCV library. This MUST be included
     System.loadLibrary("opencv_java310");
 
-    if (!noNT) {
+    if (!runtimeSettings.getNoNT()) {
       NetworkTable.setClientMode();
-      NetworkTable.setTeam(team);
-      if (ntHost != "") {
-        NetworkTable.setIPAddress(ntHost);
+      NetworkTable.setTeam(runtimeSettings.getTeam());
+      if (runtimeSettings.getNTHost() != "") {
+        NetworkTable.setIPAddress(runtimeSettings.getNTHost());
       }
       NetworkTable.initialize();
     }
+    NetworkTable publishingTable = NetworkTable.getTable("SmartDashboard");
 
     // This is the network port you want to stream the raw received image to
     // By rules, this has to be between 1180 and 1190, so 1185 is a good choice
@@ -96,7 +75,7 @@ public class Main {
     // Jpeg part delimiters are separated by a boundary string specified in the Content-Type header.
     //String cameraName = "USB Camera 0";
     String cameraName = "VisionCoProc";
-    HttpCamera camera = setHttpCamera(cameraName, inputStream);
+    HttpCamera camera = setHttpCamera(cameraName, inputStream, runtimeSettings.getCameraURL(), runtimeSettings.getNoNT());
     
     /***********************************************/
 
@@ -133,7 +112,6 @@ public class Main {
     BlueBallGripPipelineInterpreter blueInterpreter = new BlueBallGripPipelineInterpreter(bluePipeline);
     RedBallGripPipeline redPipeline = new RedBallGripPipeline();
     RedBallGripPipelineInterpreter redInterpreter = new RedBallGripPipelineInterpreter(redPipeline);
-    NetworkTable publishingTable = NetworkTable.getTable("SmartDashboard");
     System.out.println("Processing stream...");
     
     // Infinitely process image
@@ -151,7 +129,7 @@ public class Main {
       redPipeline.process(inputImage);
 
       // Update network table
-      if (!noNT) {
+      if (!runtimeSettings.getNoNT()) {
         publishingTable.putBoolean("BlueBallFound", blueInterpreter.ballsFound());
         publishingTable.putNumber("BlueBallCount", blueInterpreter.ballCount());
         publishingTable.putBoolean("RedBallFound", redInterpreter.ballsFound());
@@ -188,7 +166,7 @@ public class Main {
     }
   }
 
-  private HttpCamera setHttpCamera(String cameraName, MjpegServer server) {
+  private HttpCamera setHttpCamera(String cameraName, MjpegServer server, String cameraURL, boolean noNT) {
     // If the camera URL is explicitly specified on the command line, then use it.
     if (cameraURL != "") {
       HttpCamera camera = null;

@@ -1,0 +1,30 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "CameraVision",
+                "projectName": "CameraVision",
+                "workingDirectory": "c:\\Users\\chuck\\Documents\\BB2018BallFindingVision\\CameraVision",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "CameraVision",
+                "projectName": "CameraVision",
+                "workingDirectory": "c:\\Users\\chuck\\Documents\\BB2018BallFindingVision\\CameraVision",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}
