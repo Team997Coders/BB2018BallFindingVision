@@ -5,13 +5,6 @@ import edu.wpi.first.wpilibj.tables.*;
 import edu.wpi.cscore.*;
 import edu.wpi.cscore.HttpCamera.HttpCameraKind;
 
-import org.opencv.core.Core;
-import org.opencv.core.KeyPoint;
-import org.opencv.core.Mat;
-import org.opencv.core.Scalar;
-import org.opencv.features2d.Features2d;
-import org.opencv.imgproc.Imgproc;
-
 public class Main {
 
   public static void main(String ... argv) {
