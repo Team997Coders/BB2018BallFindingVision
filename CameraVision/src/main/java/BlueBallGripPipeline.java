@@ -1,20 +1,18 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-/*
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.HashMap;
-*/
 
 import org.opencv.core.*;
-//import org.opencv.core.Core.*;
+import org.opencv.core.Core.*;
 import org.opencv.features2d.FeatureDetector;
-//import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.*;
-//import org.opencv.objdetect.*;
+import org.opencv.objdetect.*;
 
 /**
 * BlueBallGripPipeline class.
@@ -27,8 +25,6 @@ public class BlueBallGripPipeline {
 
 	//Outputs
 	private Mat blurOutput = new Mat();
-	private Mat hsvThresholdOutput = new Mat();
-	private Mat maskOutput = new Mat();
 	private Mat rgbThresholdOutput = new Mat();
 	private MatOfKeyPoint findBlobsOutput = new MatOfKeyPoint();
 
@@ -43,32 +39,20 @@ public class BlueBallGripPipeline {
 		// Step Blur0:
 		Mat blurInput = source0;
 		BlurType blurType = BlurType.get("Box Blur");
-		double blurRadius = 9.00900900900901;
+		double blurRadius = 7.207207207207207;
 		blur(blurInput, blurType, blurRadius, blurOutput);
 
-		// Step HSV_Threshold0:
-		Mat hsvThresholdInput = blurOutput;
-		double[] hsvThresholdHue = {89.02877697841727, 180.0};
-		double[] hsvThresholdSaturation = {188.03956834532377, 255.0};
-		double[] hsvThresholdValue = {0.0, 255.0};
-		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
-
-		// Step Mask0:
-		Mat maskInput = blurOutput;
-		Mat maskMask = hsvThresholdOutput;
-		mask(maskInput, maskMask, maskOutput);
-
 		// Step RGB_Threshold0:
-		Mat rgbThresholdInput = maskOutput;
-		double[] rgbThresholdRed = {0.0, 255.0};
-		double[] rgbThresholdGreen = {36.690647482014384, 255.0};
-		double[] rgbThresholdBlue = {119.24460431654676, 255.0};
+		Mat rgbThresholdInput = blurOutput;
+		double[] rgbThresholdRed = {0.0, 0.0};
+		double[] rgbThresholdGreen = {0.0, 255.0};
+		double[] rgbThresholdBlue = {0.0, 255.0};
 		rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, rgbThresholdOutput);
 
 		// Step Find_Blobs0:
 		Mat findBlobsInput = rgbThresholdOutput;
 		double findBlobsMinArea = 150.0;
-		double[] findBlobsCircularity = {0.737410071942446, 1.0};
+		double[] findBlobsCircularity = {0.3057553956834532, 1.0};
 		boolean findBlobsDarkBlobs = false;
 		findBlobs(findBlobsInput, findBlobsMinArea, findBlobsCircularity, findBlobsDarkBlobs, findBlobsOutput);
 
@@ -80,22 +64,6 @@ public class BlueBallGripPipeline {
 	 */
 	public Mat blurOutput() {
 		return blurOutput;
-	}
-
-	/**
-	 * This method is a generated getter for the output of a HSV_Threshold.
-	 * @return Mat output from HSV_Threshold.
-	 */
-	public Mat hsvThresholdOutput() {
-		return hsvThresholdOutput;
-	}
-
-	/**
-	 * This method is a generated getter for the output of a Mask.
-	 * @return Mat output from Mask.
-	 */
-	public Mat maskOutput() {
-		return maskOutput;
 	}
 
 	/**
@@ -178,34 +146,6 @@ public class BlueBallGripPipeline {
 				Imgproc.bilateralFilter(input, output, -1, radius, radius);
 				break;
 		}
-	}
-
-	/**
-	 * Segment an image based on hue, saturation, and value ranges.
-	 *
-	 * @param input The image on which to perform the HSL threshold.
-	 * @param hue The min and max hue
-	 * @param sat The min and max saturation
-	 * @param val The min and max value
-	 * @param output The image in which to store the output.
-	 */
-	private void hsvThreshold(Mat input, double[] hue, double[] sat, double[] val,
-	    Mat out) {
-		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HSV);
-		Core.inRange(out, new Scalar(hue[0], sat[0], val[0]),
-			new Scalar(hue[1], sat[1], val[1]), out);
-	}
-
-	/**
-	 * Filter out an area of an image using a binary mask.
-	 * @param input The image on which the mask filters.
-	 * @param mask The binary image that is used to filter.
-	 * @param output The image in which to store the output.
-	 */
-	private void mask(Mat input, Mat mask, Mat output) {
-		mask.convertTo(mask, CvType.CV_8UC1);
-		Core.bitwise_xor(output, output, output);
-		input.copyTo(output, mask);
 	}
 
 	/**

@@ -50,13 +50,6 @@ public class Main {
     // This streaming mjpeg server will allow you to see the source image in a browser.
     MjpegServer inputStream = new MjpegServer("MJPEG Server", streamPort);
 
-    // Selecting a Camera
-    // Uncomment one of the 2 following camera options
-    // The top one receives a stream from another device, and performs operations based on that
-    // On windows, this one must be used since USB is not supported
-    // The bottom one opens a USB camera, and performs operations on that, along with streaming
-    // the input image so other devices can see it.
-
     // HTTP Camera
     // This is our camera name from the robot.
     // This can be set in your robot code with the following command
@@ -74,13 +67,6 @@ public class Main {
     
     /***********************************************/
 
-    /*
-    // USB Camera
-    // This gets the image from a local USB camera (does NOT work on Windows...sucks!) 
-    // Usually this will be on device 0, but there are other overloads
-    // that can be used
-    UsbCamera camera = setUsbCamera(0, inputStream);
-    */
     // Set the resolution for our camera, since this is over USB
     camera.setResolution(640,480);
 
@@ -164,15 +150,4 @@ public class Main {
     server.setSource(camera);
     return camera;
   }
-
-  /*
-  private static UsbCamera setUsbCamera(int cameraId, MjpegServer server) {
-    // This gets the image from a USB camera 
-    // Usually this will be on device 0, but there are other overloads
-    // that can be used
-    UsbCamera camera = new UsbCamera("CoprocessorCamera", cameraId);
-    server.setSource(camera);
-    return camera;
-  }
-  */
 }
