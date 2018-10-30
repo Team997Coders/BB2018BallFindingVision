@@ -1,9 +1,12 @@
-import java.util.ArrayList;
+import java.util.*;
+import java.util.concurrent.*;
 
 import edu.wpi.first.wpilibj.networktables.*;
 import edu.wpi.first.wpilibj.tables.*;
 import edu.wpi.cscore.*;
 import edu.wpi.cscore.HttpCamera.HttpCameraKind;
+
+import org.opencv.core.*;
 
 public class Main {
 
@@ -67,9 +70,6 @@ public class Main {
     
     /***********************************************/
 
-    // Set the resolution for our camera, since this is over USB
-    camera.setResolution(640,480);
-
     // This creates a CvSink for us to use. This grabs images from our selected camera, 
     // and will allow us to use those images in opencv
     CvSink imageSink = new CvSink("CV Image Grabber");
@@ -77,20 +77,82 @@ public class Main {
 
     // This creates a CvSource to use.
     // This will take in a Mat image that has had OpenCV operations. 
-    CvSource imageSource = new CvSource("CV Image Source", VideoMode.PixelFormat.kMJPEG, 640, 480, 30);
+    CvSource imageSource = new CvSource(
+      "CV Image Source", 
+      VideoMode.PixelFormat.kMJPEG, 
+      camera.getVideoMode().width, 
+      camera.getVideoMode().height, 
+      camera.getVideoMode().fps);
     // This streaming mjpeg server will allow you to see the final image processed image in a browser.
     MjpegServer cvStream = new MjpegServer("CV Image Stream", 1186);
     cvStream.setSource(imageSource);
 
-    ProcessImages processImages = new ProcessImages(imageSink, imageSource, publishingTable);
-    Thread processImagesThread = new Thread(processImages);
+    // Set up the image pump to grab images in a separate thread.
+    ImagePump imagePump = new ImagePump(imageSink);
+
+    // Wire up image processing components
+    IBallPipeline blueBallPipeline = new BlueBallPipeline();
+    ImageProcessor blueBallImageProcessor = 
+      new ImageProcessor(
+        blueBallPipeline, 
+        new BlueBallNetworkTableWriter(
+          new BallPipelineInterpreter(blueBallPipeline), 
+          publishingTable));
+
+    IBallPipeline redBallPipeline = new RedBallPipeline();
+    ImageProcessor redBallImageProcessor = 
+      new ImageProcessor(
+        redBallPipeline, 
+        new BlueBallNetworkTableWriter(
+          new BallPipelineInterpreter(redBallPipeline), 
+          publishingTable));
+
+    Mat inputImage = new Mat();
+    Mat outputImage = new Mat();
+    Mat outputImage2 = new Mat();
+
     System.out.println("Processing stream...");
-    processImagesThread.start();
+
+    // Prime the image pump
     try {
-      processImagesThread.join();
-    } catch (InterruptedException ie) {
-      processImages.requestThreadStop();
+      inputImage = imagePump.pump().get();
+    } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
+    } catch (ExecutionException e) {
+      System.out.println(e.getMessage());
+    }
+
+    while (!Thread.currentThread().isInterrupted()) {
+      if (!inputImage.empty()) {
+        // Process the image looking for respective color balls...concurrently
+        Future<Void> redBallImageProcessorFuture = redBallImageProcessor.process(inputImage);
+        Future<Void> blueBallImageProcessorFuture = blueBallImageProcessor.process(inputImage);
+        Future<Mat> nextImageFuture = imagePump.pump();
+        try {
+          redBallImageProcessorFuture.get();
+          blueBallImageProcessorFuture.get();
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+          System.out.println(e.getMessage());
+        }
+
+        // Annotate the image
+        outputImage = redBallImageProcessor.annotate(inputImage);
+        outputImage2 = blueBallImageProcessor.annotate(outputImage);
+
+        // Write out the image
+        imageSource.putFrame(outputImage2);
+
+        // Get the next image
+        try {
+          inputImage = nextImageFuture.get();
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+          System.out.println(e.getMessage());
+        }
+      }
     }
   }
 

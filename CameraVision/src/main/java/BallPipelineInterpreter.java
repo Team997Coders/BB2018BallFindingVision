@@ -1,18 +1,18 @@
 /*
-* redBallGripPipelineInterpreter class.
+* BallPipelineInterpreter class.
 *
-* <p>Interpret the result of the red ball pipeline.  This abstracts out the logic
-*    from the pipeline class
+* <p>Interpret the result of the ball pipeline.  This abstracts out the logic
+*    from the pipeline class.
 *
 * @author Chuck Benedict
 */
-public class RedBallGripPipelineInterpreter {
+public class BallPipelineInterpreter {
 
 	// Private class vars
-	private RedBallGripPipeline pipeline;
+	private IBallPipeline pipeline;
 
 	// Constructor taking a processed pipeline
-	public RedBallGripPipelineInterpreter(RedBallGripPipeline pipeline) {
+	public BallPipelineInterpreter(IBallPipeline pipeline) {
 		if (pipeline == null)
 		{
 			throw new IllegalArgumentException("Pipline cannot be null.");

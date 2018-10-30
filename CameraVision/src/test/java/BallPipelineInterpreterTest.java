@@ -5,17 +5,17 @@ import org.opencv.core.MatOfKeyPoint;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for blue ball vision pipeline interpreter class
+ * Unit tests for ball vision pipeline interpreter class
  * We factor out dependencies of having to have an executed pipeline using Mockito.
  */
-public class BlueBallGripPipelineInterpreterTest 
+public class BallPipelineInterpreterTest 
 {
     @Test
     public void itShouldFindBalls()
     {
         // use Mockito to mock a pipeline instance
         // we don't want to have to wire up a real pipeline object to unit test the interperter class
-        BlueBallGripPipeline pipeline = mock(BlueBallGripPipeline.class);
+        IBallPipeline pipeline = mock(IBallPipeline.class);
 
         // Wire up our mocked method to return what we need to test the interpreter class
         // Note that we mock a returned instance of findBlobsOutput (MatOfKeyPoint in this case), 
@@ -24,7 +24,7 @@ public class BlueBallGripPipelineInterpreterTest
         when(pipeline.findBlobsOutput().empty()).thenReturn(false);
 
         // instantiate our class to test
-        BlueBallGripPipelineInterpreter interpreter = new BlueBallGripPipelineInterpreter(pipeline);
+        BallPipelineInterpreter interpreter = new BallPipelineInterpreter(pipeline);
 
         // We should find balls
         assertTrue(interpreter.ballsFound());
@@ -36,7 +36,7 @@ public class BlueBallGripPipelineInterpreterTest
         //TODO: DRY this instantiation ceremony up across tests!
         // use Mockito to mock a pipeline instance
         // we don't want to have to wire up a real pipeline object to unit test the interperter class
-        BlueBallGripPipeline pipeline = mock(BlueBallGripPipeline.class);
+        IBallPipeline pipeline = mock(IBallPipeline.class);
         long countedBalls = 10;
 
         // Wire up our mocked method to return what we need to test the interpreter class
@@ -46,7 +46,7 @@ public class BlueBallGripPipelineInterpreterTest
         when(pipeline.findBlobsOutput().total()).thenReturn(countedBalls);
 
         // instantiate our class to test
-        BlueBallGripPipelineInterpreter interpreter = new BlueBallGripPipelineInterpreter(pipeline);
+        BallPipelineInterpreter interpreter = new BallPipelineInterpreter(pipeline);
 
         // We should get total count of balls found
         assertEquals(countedBalls, interpreter.ballCount());
