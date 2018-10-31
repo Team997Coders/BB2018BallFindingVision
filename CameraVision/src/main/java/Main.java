@@ -103,7 +103,7 @@ public class Main {
     ImageProcessor redBallImageProcessor = 
       new ImageProcessor(
         redBallPipeline, 
-        new BlueBallNetworkTableWriter(
+        new RedBallNetworkTableWriter(
           new BallPipelineInterpreter(redBallPipeline), 
           publishingTable));
 
