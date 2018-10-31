@@ -107,6 +107,7 @@ public class Main {
           new BallPipelineInterpreter(redBallPipeline), 
           publishingTable));
 
+    // Init these vars outside processing loop, as they are expensive to create.
     Mat inputImage = new Mat();
     Mat outputImage = new Mat();
     Mat outputImage2 = new Mat();
@@ -125,8 +126,10 @@ public class Main {
     while (!Thread.currentThread().isInterrupted()) {
       if (!inputImage.empty()) {
         // Process the image looking for respective color balls...concurrently
-        Future<Void> redBallImageProcessorFuture = redBallImageProcessor.process(inputImage);
-        Future<Void> blueBallImageProcessorFuture = blueBallImageProcessor.process(inputImage);
+        // Futures are returned immediately while the backgroud process called runs
+        // asynchronously.  Also, pump the frame grabber for the next frame.
+        Future<?> redBallImageProcessorFuture = redBallImageProcessor.process(inputImage);
+        Future<?> blueBallImageProcessorFuture = blueBallImageProcessor.process(inputImage);
         Future<Mat> nextImageFuture = imagePump.pump();
         try {
           redBallImageProcessorFuture.get();

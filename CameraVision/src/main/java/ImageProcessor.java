@@ -17,7 +17,7 @@ public class ImageProcessor {
         this.networkTableWriter = networkTableWriter;
     }
 
-    public Future<Void> process(Mat inputImage)
+    public Future<?> process(Mat inputImage)
     {
         return executor.submit(() -> {
             // Apply the pipeline to the image.
