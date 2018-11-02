@@ -69,3 +69,5 @@ Please see the `build.gradle` file for where to change these.
 
 ## Further Documentation
 Youtube videos are located on the [Spartan Robotics](https://www.youtube.com/channel/UCekeDJzimFuocARIjuiDrGQ) Youtube channel.  These further describe the [system architecture](https://docs.google.com/drawings/d/1QBvX5yAShsnoBBzIV375vycgUSIo_4coL-5SogxS-IU), the project, provide a code walkthrough, discuss the gradle build system, and introduce automated testing.
+
+Having trouble executing tests that depend on Java Native Interfaces (JNI) like opencv?  See this [Chief Delphi Post](https://www.chiefdelphi.com/forums/showthread.php?t=167097).
