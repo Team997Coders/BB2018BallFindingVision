@@ -44,9 +44,9 @@ public class RedBallGripPipeline {
 
 		// Step RGB_Threshold0:
 		Mat rgbThresholdInput = blurOutput;
-		double[] rgbThresholdRed = {185.74640287769782, 255.0};
-		double[] rgbThresholdGreen = {0.0, 52.21843003412969};
-		double[] rgbThresholdBlue = {0.0, 91.81740614334471};
+		double[] rgbThresholdRed = {177, 255.0};
+		double[] rgbThresholdGreen = {0.0, 126};
+		double[] rgbThresholdBlue = {0.0, 138};
 		rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, rgbThresholdOutput);
 
 		// Step Find_Blobs0:

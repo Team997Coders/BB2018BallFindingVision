@@ -10,6 +10,9 @@ import static org.mockito.Mockito.*;
  */
 public class BallPipelineInterpreterTest 
 {
+    /**
+     * Test that the interpreter class finds balls.
+     */
     @Test
     public void itShouldFindBalls()
     {
@@ -30,10 +33,12 @@ public class BallPipelineInterpreterTest
         assertTrue(interpreter.ballsFound());
     }
 
+    /**
+     * Test that the interpreter class counts balls.
+     */
     @Test
     public void itShouldCountBalls()
     {
-        //TODO: DRY this instantiation ceremony up across tests!
         // use Mockito to mock a pipeline instance
         // we don't want to have to wire up a real pipeline object to unit test the interperter class
         IBallPipeline pipeline = mock(IBallPipeline.class);

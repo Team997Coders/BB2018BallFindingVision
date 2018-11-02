@@ -1,28 +1,28 @@
 {
     "run": {
-        "default": "",
+        "default": "CameraVision",
         "items": [
             {
                 "name": "CameraVision",
                 "projectName": "CameraVision",
-                "workingDirectory": "c:\\Users\\chuck\\Documents\\BB2018BallFindingVision\\CameraVision",
+                "workingDirectory": "C:\\Users\\chuck\\Documents\\BB2018BallFindingVision\\CameraVision",
                 "args": [],
                 "vmargs": [],
-                "env": {},
+                "env": {"PATH": "C:\\Users\\chuck\\Documents\\BB2018BallFindingVision\\CameraVision\\build\\opencv"},
                 "preLaunchTask": ""
             }
         ]
     },
     "debug": {
-        "default": "",
+        "default": "CameraVision",
         "items": [
             {
                 "name": "CameraVision",
                 "projectName": "CameraVision",
-                "workingDirectory": "c:\\Users\\chuck\\Documents\\BB2018BallFindingVision\\CameraVision",
+                "workingDirectory": "C:\\Users\\chuck\\Documents\\BB2018BallFindingVision\\CameraVision",
                 "args": [],
                 "vmargs": [],
-                "env": {},
+                "env": {"PATH": "C:\\Users\\chuck\\Documents\\BB2018BallFindingVision\\CameraVision\\build\\opencv"},
                 "preLaunchTask": ""
             }
         ]

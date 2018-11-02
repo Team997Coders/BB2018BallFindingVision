@@ -1,17 +1,20 @@
 import edu.wpi.first.wpilibj.networktables.*;
 
-public class RedBallNetworkTableWriter implements INetworkTableWriter
+/**
+ * Specific implementation for writing red ball data to network tables.
+ * 
+ * @author Chuck Benedict, Mentor, Team 997
+ */
+public class RedBallNetworkTableWriter extends NetworkTableWriter
 {
-    BallPipelineInterpreter interpreter;
-    NetworkTable publishingTable;
-
     public RedBallNetworkTableWriter(BallPipelineInterpreter interpreter, NetworkTable publishingTable) {
-        this.interpreter = interpreter;
-        this.publishingTable = publishingTable;
+        super(interpreter, publishingTable);
     }
 
-    public void write() {
-        publishingTable.putBoolean("RedBallFound", interpreter.ballsFound());
-        publishingTable.putNumber("RedBallCount", interpreter.ballCount());
+    public String getBallFoundKey() {
+        return "RedBallFound";
+    }
+    public String getBallCountKey() {
+        return "RedBallCount";
     }
 }

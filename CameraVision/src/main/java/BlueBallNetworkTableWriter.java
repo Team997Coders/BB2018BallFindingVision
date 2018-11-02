@@ -1,17 +1,20 @@
 import edu.wpi.first.wpilibj.networktables.*;
 
-public class BlueBallNetworkTableWriter implements INetworkTableWriter
+/**
+ * Specific implementation for writing blue ball data to network tables.
+ * 
+ * @author Chuck Benedict, Mentor, Team 997
+ */
+public class BlueBallNetworkTableWriter extends NetworkTableWriter
 {
-    BallPipelineInterpreter interpreter;
-    NetworkTable publishingTable;
-
     public BlueBallNetworkTableWriter(BallPipelineInterpreter interpreter, NetworkTable publishingTable) {
-        this.interpreter = interpreter;
-        this.publishingTable = publishingTable;
+        super(interpreter, publishingTable);
     }
 
-    public void write() {
-        publishingTable.putBoolean("BlueBallFound", interpreter.ballsFound());
-        publishingTable.putNumber("BlueBallCount", interpreter.ballCount());
+    public String getBallFoundKey() {
+        return "BlueBallFound";
+    }
+    public String getBallCountKey() {
+        return "BlueBallCount";
     }
 }

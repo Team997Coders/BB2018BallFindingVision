@@ -44,7 +44,7 @@ public class BlueBallGripPipeline {
 
 		// Step RGB_Threshold0:
 		Mat rgbThresholdInput = blurOutput;
-		double[] rgbThresholdRed = {0.0, 0.0};
+		double[] rgbThresholdRed = {0.0, 7.0};
 		double[] rgbThresholdGreen = {0.0, 255.0};
 		double[] rgbThresholdBlue = {0.0, 255.0};
 		rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, rgbThresholdOutput);

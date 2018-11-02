@@ -44,20 +44,12 @@ dependencies {
 }
 
 test {
+  // This makes the native opencv bits available to be found and loaded by unit tests
+  systemProperty "java.library.path", "${openCvUnzipLocation}"
+  
   // log the following test events to the console...otherwise, everything is written to a report
   testLogging {
     events "PASSED", "STARTED", "FAILED", "SKIPPED"
-  }
-
-  options {
-    // This makes the native opencv bits available to be found and loaded by unit tests
-    if (buildType == "windows") {
-      def path = '' + openCvUnzipLocation
-      environment 'PATH', path
-    } else {
-      def path = '' + openCvUnzipLocation
-      environment 'LD_LIBRARY_PATH', path
-    }
   }
 }
 
