@@ -10,7 +10,7 @@ import static org.mockito.Mockito.*;
  * 
  * @author Chuck Benedict, Mentor, Team 997
  */
-public class NetworkTableWriterTest {
+public class NetworkTableWriterUnitTest {
     /**
      * Test that the NetworkTableWriter class writes the ball found boolean
      * to a network table. Note the use of a helper concrete class to do this.

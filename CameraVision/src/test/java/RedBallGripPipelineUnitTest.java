@@ -10,7 +10,7 @@ import org.opencv.imgcodecs.Imgcodecs;
  * 
  * @author Chuck Benedict, Mentor, Team 997
  */
-public class RedBallGripPipelineTest {
+public class RedBallGripPipelineUnitTest {
     // This must be done in order to call opencv classes
     static {
         System.loadLibrary("opencv_java310");

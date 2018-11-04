@@ -10,14 +10,17 @@ import org.opencv.imgcodecs.Imgcodecs;
  * 
  * @author Chuck Benedict, Mentor, Team 997
  */
-public class BlueBallGripPipelineTest {
+public class BlueBallGripPipelineUnitTest {
     // This must be done in order to call opencv classes
     static {
         System.loadLibrary("opencv_java310");
     }
 
+    //TODO: Images with multiple balls?
+    //TODO: Images with proven false positives?
+
     /**
-     * It should find a blue ball.  A jpeg image is read and fed into process method.
+     * It should find a blue ball.
      */
     @Test
     public void itShouldFindABlueBallWithDarkerExposure() throws IOException {
@@ -30,6 +33,9 @@ public class BlueBallGripPipelineTest {
         assertEquals(1, pipeline.findBlobsOutput().total());
     }
 
+    /**
+     * It should still find a blue ball.
+     */
     @Test
     public void itShouldFindABlueBallWithLighterExposure() throws IOException {
         // Assemble

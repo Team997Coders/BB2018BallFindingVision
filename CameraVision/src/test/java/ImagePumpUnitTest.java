@@ -6,7 +6,6 @@ import org.opencv.core.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import java.util.concurrent.*;
 
 /**
  * Test that the ImagePump makes appropriate calls to dependent classes
@@ -17,7 +16,7 @@ import java.util.concurrent.*;
  * 
  * @author Chuck Benedict, Mentor, Team 997
  */
-public class ImagePumpTest 
+public class ImagePumpUnitTest 
 {
     // This must be done in order to call opencv classes
     static {
@@ -25,15 +24,15 @@ public class ImagePumpTest
     }
 
     /**
-     * Test that the ImagePump class grabs the next frame from an image sink
-     * and returns a Future with a Mat. This test uses a trick to mock a reference
+     * Test that the ImagePump class grabs the next frame from an image sink.
+     * This test uses a trick to mock a reference
      * variable passed into a dependency method call (grabFrame in this case).
      * 
      * @see <a href="https://stackoverflow.com/questions/29643995/how-to-change-an-object-that-is-passed-by-reference-to-a-mock-in-mockito">Modify Reference Vars</a>
      * @author Chuck Benedict, Mentor, Team 997
      */
     @Test
-    public void itPumpsTheImageSink() throws InterruptedException, ExecutionException {
+    public void itPumpsTheImageSink() {
         // Assemble
 
         // Create a fakey image that we will use to have the grabFrame function
@@ -57,9 +56,49 @@ public class ImagePumpTest
         ImagePump imagePump = new ImagePump(imageSinkMock);
 
         // Act
-        Future<Mat> image = imagePump.pump();
+        Mat image = imagePump.pump();
 
         // Assert
-        assertEquals(image.get().size(), mockedImage.size());
+        assertEquals(image.size(), mockedImage.size());
+    }
+
+    /**
+     * Test that the ImagePump class grabs the next frame from an image sink
+     * asynchronously. This test uses a trick to mock a reference
+     * variable passed into a dependency method call (grabFrame in this case).
+     * 
+     * @see <a href="https://stackoverflow.com/questions/29643995/how-to-change-an-object-that-is-passed-by-reference-to-a-mock-in-mockito">Modify Reference Vars</a>
+     * @author Chuck Benedict, Mentor, Team 997
+     */
+    @Test
+    public void itPumpsTheImageSinkAsync() {
+        // Assemble
+
+        // Create a fakey image that we will use to have the grabFrame function
+        // of the mocked imageSink return. 
+        Mat mockedImage = Mat.ones(3, 3, CvType.CV_8U);
+
+        // Use Mockito to mock up our prerequisites
+        // Use an Answer to intercept the action of filling the
+        // supplied inputImage Mat of the grabFrame call...inside the pump method.
+        CvSink imageSinkMock = mock(CvSink.class);
+        doAnswer(new Answer<Long>() {
+            @Override
+            public Long answer(InvocationOnMock invocation) {
+                Mat mat = (Mat) invocation.getArguments()[0];
+                mockedImage.copyTo(mat);
+                return 1L;
+            }
+        }).when(imageSinkMock).grabFrame(any(Mat.class));
+
+        // Wire up class under test
+        ImagePump imagePump = new ImagePump(imageSinkMock);
+
+        // Act
+        imagePump.pumpAsync();
+        Mat image = imagePump.awaitPumpCompletion();
+
+        // Assert
+        assertEquals(image.size(), mockedImage.size());
     }
 }

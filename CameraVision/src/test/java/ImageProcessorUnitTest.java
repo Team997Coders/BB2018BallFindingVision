@@ -1,7 +1,6 @@
 import org.junit.*;
 import org.opencv.core.*;
 import static org.mockito.Mockito.*;
-import java.util.concurrent.*;
 
 /**
  * Test that the ImageProcessor makes appropriate calls to dependent classes
@@ -12,7 +11,7 @@ import java.util.concurrent.*;
  * 
  * @author Chuck Benedict, Mentor, Team 997
  */
-public class ImageProcessorTest 
+public class ImageProcessorUnitTest 
 {
     // This must be done in order to call opencv classes
     static {
@@ -25,7 +24,7 @@ public class ImageProcessorTest
      * itself actually does.
      */
     @Test
-    public void itShouldProcessMyPipeline() throws InterruptedException, ExecutionException {
+    public void itShouldProcessMyPipeline() {
         // Assemble
         // use Mockito to mock a pipeline and network table writer object
         IBallPipeline pipelineMock = mock(IBallPipeline.class);
@@ -34,10 +33,10 @@ public class ImageProcessorTest
         Mat emptyImage = new Mat();
 
         // Act
-        Future<?> imageProcessorFuture = imageProcessor.process(emptyImage);
+        imageProcessor.processAsync(emptyImage);
+        imageProcessor.awaitProcessCompletion();
 
         //Assert
-        imageProcessorFuture.get();
         verify(pipelineMock, times(1)).process(emptyImage);
     }
 
@@ -47,7 +46,7 @@ public class ImageProcessorTest
      * itself actually does.
      */
     @Test
-    public void itShouldWriteToNetworkTables() throws InterruptedException, ExecutionException {
+    public void itShouldWriteToNetworkTables() {
         // Assemble
         // use Mockito to mock a pipeline and network table writer object
         IBallPipeline pipelineMock = mock(IBallPipeline.class);
@@ -56,10 +55,10 @@ public class ImageProcessorTest
         Mat emptyImage = new Mat();
 
         // Act
-        Future<?> imageProcessorFuture = imageProcessor.process(emptyImage);
+        imageProcessor.processAsync(emptyImage);
+        imageProcessor.awaitProcessCompletion();
 
         //Assert
-        imageProcessorFuture.get();
         verify(networkTableWriterMock, times(1)).write();
     }
 }

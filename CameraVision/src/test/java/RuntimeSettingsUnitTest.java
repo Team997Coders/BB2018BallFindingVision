@@ -7,7 +7,7 @@ import org.junit.*;
  * Unit tests for runtime settings class
  * This class factors out use of jcommander from main class.
  */
-public class RuntimeSettingsTest 
+public class RuntimeSettingsUnitTest 
 {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();

@@ -8,7 +8,7 @@ import static org.mockito.Mockito.*;
  * Unit tests for ball vision pipeline interpreter class
  * We factor out dependencies of having to have an executed pipeline using Mockito.
  */
-public class BallPipelineInterpreterTest 
+public class BallPipelineInterpreterUnitTest 
 {
     /**
      * Test that the interpreter class finds balls.

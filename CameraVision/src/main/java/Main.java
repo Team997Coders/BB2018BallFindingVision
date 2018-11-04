@@ -1,11 +1,8 @@
-import java.util.*;
-import java.util.concurrent.*;
-
-import edu.wpi.first.wpilibj.networktables.*;
-import edu.wpi.first.wpilibj.tables.*;
 import edu.wpi.cscore.*;
 import edu.wpi.cscore.HttpCamera.HttpCameraKind;
-
+import edu.wpi.first.wpilibj.networktables.*;
+import edu.wpi.first.wpilibj.tables.*;
+import java.util.*;
 import org.opencv.core.*;
 
 public class Main {
@@ -87,25 +84,12 @@ public class Main {
     MjpegServer cvStream = new MjpegServer("CV Image Stream", 1186);
     cvStream.setSource(imageSource);
 
-    // Set up the image pump to grab images in a separate thread.
+    // Set up the image pump to grab images.
     ImagePump imagePump = new ImagePump(imageSink);
 
-    // Wire up image processing components
-    IBallPipeline blueBallPipeline = new BlueBallPipeline();
-    ImageProcessor blueBallImageProcessor = 
-      new ImageProcessor(
-        blueBallPipeline, 
-        new BlueBallNetworkTableWriter(
-          new BallPipelineInterpreter(blueBallPipeline), 
-          publishingTable));
-
-    IBallPipeline redBallPipeline = new RedBallPipeline();
-    ImageProcessor redBallImageProcessor = 
-      new ImageProcessor(
-        redBallPipeline, 
-        new RedBallNetworkTableWriter(
-          new BallPipelineInterpreter(redBallPipeline), 
-          publishingTable));
+    // Get image processing components.
+    ImageProcessor blueBallImageProcessor = BlueBallImageProcessorFactory.CreateImageProcessor(publishingTable);
+    ImageProcessor redBallImageProcessor = RedBallImageProcessorFactory.CreateImageProcessor(publishingTable);
 
     // Init these vars outside processing loop, as they are expensive to create.
     Mat inputImage = new Mat();
@@ -115,30 +99,20 @@ public class Main {
     System.out.println("Processing stream...");
 
     // Prime the image pump
-    try {
-      inputImage = imagePump.pump().get();
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-    } catch (ExecutionException e) {
-      System.out.println(e.getMessage());
-    }
+    inputImage = imagePump.pump();
 
     while (!Thread.currentThread().isInterrupted()) {
       if (!inputImage.empty()) {
         // Process the image looking for respective color balls...concurrently
-        // Futures are returned immediately while the backgroud process called runs
+        // ProcessAsync chews on the image and writes to 
         // asynchronously.  Also, pump the frame grabber for the next frame.
-        Future<?> redBallImageProcessorFuture = redBallImageProcessor.process(inputImage);
-        Future<?> blueBallImageProcessorFuture = blueBallImageProcessor.process(inputImage);
-        Future<Mat> nextImageFuture = imagePump.pump();
-        try {
-          redBallImageProcessorFuture.get();
-          blueBallImageProcessorFuture.get();
-        } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
-        } catch (ExecutionException e) {
-          System.out.println(e.getMessage());
-        }
+        redBallImageProcessor.processAsync(inputImage);
+        blueBallImageProcessor.processAsync(inputImage);
+        imagePump.pumpAsync();
+
+        // Await image processing to finsh
+        redBallImageProcessor.awaitProcessCompletion();
+        blueBallImageProcessor.awaitProcessCompletion();
 
         // Annotate the image
         outputImage = redBallImageProcessor.annotate(inputImage);
@@ -148,13 +122,10 @@ public class Main {
         imageSource.putFrame(outputImage2);
 
         // Get the next image
-        try {
-          inputImage = nextImageFuture.get();
-        } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
-        } catch (ExecutionException e) {
-          System.out.println(e.getMessage());
-        }
+        inputImage = imagePump.awaitPumpCompletion();
+      } else {
+        // Get the next image, because the prior one was empty
+        inputImage = imagePump.pump();
       }
     }
   }
