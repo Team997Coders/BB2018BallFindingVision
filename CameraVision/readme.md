@@ -54,3 +54,11 @@ Usage: CameraVision [options]
 Once this application is run, it publishes two HTTP endpoints:
 `http://localhost:1185` is the source image stream in MJPEG over HTTP format and 
 `http://localhost:1186` is the image processed image stream in MJPEG over HTTP format
+
+The application also writes image processed interpreted values to network tables: 
+| Key                               | Type    | Description                                     |
+| --------------------------------- | ------- | ----------------------------------------------- |
+| `SmartDashboard\BlueBallFound`    | boolean | True if any blue ball is found in frame         |
+| `SmartDashboard\BlueBallCount`    | int     | Count of blue balls found in frame              |
+| `SmartDashboard\RedBallFound`     | boolean | True if any red ball is found in frame          |
+| `SmartDashboard\RedBallCount`     | int     | Count of red balls found in frame               |
