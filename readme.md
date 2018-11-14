@@ -20,6 +20,8 @@ This is a sample project based on the [WPILib sample build system](https://githu
 * [Java 8](https://developers.redhat.com/products/openjdk/download/)
 * [gstreamer](https://gstreamer.freedesktop.org/download/)
   * Run the complete install instead of the typical install.
+  * Double check that the gstreamer directory is in your path.  On Windows, this should be
+  the c:\gstreamer\1.0\x86_64\bin directory. If you go to a command prompt, and type `gst-launch-1.0 --help` you should get help for the command. If you get file not found, it is not in your path. 
 * [Bonjour](https://support.apple.com/kb/DL999?locale=en_US)
   * Optional.  If you want to access roboRio or raspberry pi by hostname without registering in DNS.  If you have the driver station installed, Bonjour protocol is already installed.
   
