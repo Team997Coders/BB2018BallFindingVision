@@ -52,5 +52,5 @@ Usage: CameraVision [options]
 
 ## Usage
 Once this application is run, it publishes two HTTP endpoints:
-`http://localhost:1185` is the source image stream in MJPEG over HTTP format
+`http://localhost:1185` is the source image stream in MJPEG over HTTP format and 
 `http://localhost:1186` is the image processed image stream in MJPEG over HTTP format
