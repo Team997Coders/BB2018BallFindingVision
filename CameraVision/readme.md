@@ -55,7 +55,8 @@ Once this application is run, it publishes two HTTP endpoints:
 `http://localhost:1185` is the source image stream in MJPEG over HTTP format and 
 `http://localhost:1186` is the image processed image stream in MJPEG over HTTP format
 
-The application also writes image processed interpreted values to network tables: 
+The application also writes image processed interpreted values to network tables:
+
 | Key                               | Type    | Description                                     |
 | --------------------------------- | ------- | ----------------------------------------------- |
 | `SmartDashboard\BlueBallFound`    | boolean | True if any blue ball is found in frame         |
