@@ -65,6 +65,9 @@ JUnit and Mockito have been used to demonstrate automated testing of vision proc
 This complete sample gets an image from a local camera stream. It then restreams the input image in it's raw form in order to make it viewable on another system.
 It then creates an OpenCV sink from the camera, which allows us to grab OpenCV images. It then creates an output stream for an OpenCV image, for instance, so you can stream an annotated image. The default sample attempts to identify a blue raquetball for the [2018 Bunny Bot](http://team1540.org/bunnybots) game. In addition, a [NetworkTables simultated server](https://github.com/robotpy/pynetworktables) is set up, so you can send data regarding the targets to a server that simulates a robot.  A command line arg enables you to change this setting. (TODO: Document them here)
 
+## Running the example
+After building the project, go to `./bin` and run `startup.bat` (for Windows). Note that git-bash shells will not work. Use the default Windows shell.
+
 ## Other configuration options
 The build script provides a few other configuration options. These include selecting the main class name, and providing an output name for the project.
 Please see the `build.gradle` file for where to change these. 
