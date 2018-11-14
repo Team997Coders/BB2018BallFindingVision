@@ -20,6 +20,8 @@ This is a sample project based on the [WPILib sample build system](https://githu
 * [Java 8](https://developers.redhat.com/products/openjdk/download/)
 * [gstreamer](https://gstreamer.freedesktop.org/download/)
   * Run the complete install instead of the typical install.
+  * Double check that the gstreamer directory is in your path.  On Windows, this should be
+  the c:\gstreamer\1.0\x86_64\bin directory. If you go to a command prompt, and type `gst-launch-1.0 --help` you should get help for the command. If you get file not found, it is not in your path. 
 * [Bonjour](https://support.apple.com/kb/DL999?locale=en_US)
   * Optional.  If you want to access roboRio or raspberry pi by hostname without registering in DNS.  If you have the driver station installed, Bonjour protocol is already installed.
   
@@ -62,6 +64,9 @@ JUnit and Mockito have been used to demonstrate automated testing of vision proc
 
 This complete sample gets an image from a local camera stream. It then restreams the input image in it's raw form in order to make it viewable on another system.
 It then creates an OpenCV sink from the camera, which allows us to grab OpenCV images. It then creates an output stream for an OpenCV image, for instance, so you can stream an annotated image. The default sample attempts to identify a blue raquetball for the [2018 Bunny Bot](http://team1540.org/bunnybots) game. In addition, a [NetworkTables simultated server](https://github.com/robotpy/pynetworktables) is set up, so you can send data regarding the targets to a server that simulates a robot.  A command line arg enables you to change this setting. (TODO: Document them here)
+
+## Running the example
+After building the project, go to `./bin` and run `startup.bat` (for Windows). Note that git-bash shells will not work. Use the default Windows shell.
 
 ## Other configuration options
 The build script provides a few other configuration options. These include selecting the main class name, and providing an output name for the project.
