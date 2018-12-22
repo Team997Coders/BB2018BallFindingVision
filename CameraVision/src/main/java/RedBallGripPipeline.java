@@ -220,6 +220,8 @@ public class RedBallGripPipeline {
 			e.printStackTrace();
 		}
 
+    if (input == null) input = new Mat();
+    if (blobList == null) blobList = new MatOfKeyPoint();
 		blobDet.detect(input, blobList);
 	}
 

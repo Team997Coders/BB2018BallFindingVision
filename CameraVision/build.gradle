@@ -69,7 +69,11 @@ shadowJar {
       runFile.write commandString
     } else {
       def runFile = new File("${scriptsDir}/run${projectName}.sh")
+      runFile.write "while true; do"
       runFile.write commandString
+      runFile.write "echo ""Server 'CameraServer' crashed with exit code $?.  Respawning.."" >&2"
+      runFile.write "sleep 1"
+      runFile.write "done"
       def runDebugFile = new File("${scriptsDir}/run${projectName}-debug.sh")
       runDebugFile.write debugCommandString
     }
