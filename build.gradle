@@ -63,12 +63,12 @@ task buildPythonVirtualEnvironment(type: Exec) {
   // Assumption: venv is installed...which it is for the binary msi version of Python I got for Windows
   description "Creates a virtual python environment in the root bin directory."
   outputs.dir "${pythonDirectory}"
-  commandLine "python", "-m", "venv", "--clear", "${pythonDirectory}"
+  commandLine "python3", "-m", "venv", "--clear", "${pythonDirectory}"
 }
 
 task installIPCameraApp(type: Exec) {
     dependsOn ':CameraServer:pydist'
-    commandLine "${pythonDirectory}/Scripts/pip", "install", "--upgrade", "--find-links", "file://${rootProject.projectDir}/CameraServer/build/python/dist", "ipcamera"
+    commandLine "${pythonDirectory}/bin/pip", "install", "--upgrade", "--find-links", "file://${rootProject.projectDir}/CameraServer/build/python/dist", "ipcamera"
     doLast {
         copy {
             into binDirectory
@@ -84,7 +84,7 @@ task installIPCameraApp(type: Exec) {
 
 task installNTServerApp(type: Exec) {
   dependsOn ':NTSimulator:pydist'
-  commandLine "${pythonDirectory}/Scripts/pip", "install", "--upgrade", "--find-links", "file://${rootProject.projectDir}/NTSimulator/build/python/dist", "ntserver"
+  commandLine "${pythonDirectory}/bin/pip", "install", "--upgrade", "--find-links", "file://${rootProject.projectDir}/NTSimulator/build/python/dist", "ntserver"
 }
 
 task installVisionApp(type: Copy) {
